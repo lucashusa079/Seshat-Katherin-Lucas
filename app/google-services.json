@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1031088525514",
+    "project_id": "seshat-9110b",
+    "storage_bucket": "seshat-9110b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031088525514:android:b8a5ea40f3fdc8e365a433",
+        "android_client_info": {
+          "package_name": "com.lucas.sashat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxsgs_xK82dBkr1ycl5-Pz0sy60lJ0rUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
