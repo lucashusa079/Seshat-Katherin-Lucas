@@ -1,8 +1,6 @@
 package com.lucas.sashat.firebase;
 
 import android.content.Context;
-import android.util.Log;
-
 import com.lucas.sashat.R;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -131,35 +129,5 @@ public class FirebaseFirestoreHelper {
                 .get()
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
-    }
-
-    public void addBookToUserList(String userID, String bookID, String status) {
-        DocumentReference userRef = db.collection("Users").document(userID);
-
-        // Campo donde se agregará el libro dependiendo del estado
-        String listField = "";
-
-        switch (status) {
-            case "Leyendo":
-                listField = "currentlyReading";
-                break;
-            case "Leído":
-                listField = "books";
-                break;
-            case "Por Leer":
-                listField = "toRead";
-                break;
-        }
-
-        // Agregar el bookID a la lista correspondiente
-        userRef.update(listField, FieldValue.arrayUnion(bookID))
-                .addOnSuccessListener(aVoid -> {
-                    // Si la actualización fue exitosa, muestra un mensaje
-                    Log.d("Firestore", "Libro agregado correctamente a la lista: " + status);
-                })
-                .addOnFailureListener(e -> {
-                    // Si hubo un error, muestra un mensaje
-                    Log.e("Firestore", "Error al agregar libro a la lista", e);
-                });
     }
 }
