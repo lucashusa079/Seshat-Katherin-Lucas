@@ -12,4 +12,19 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log in</string>
+    <string name="forgoPassword">Forgot your password?</string>
+    <string name="create_account">Create Account</string>
+    <string name="user">User</string>
+    <string name="helper_textPassword">Passwords must be at least 6 characters</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="signIn">Sign-In now</string>
+    <string name="enter_email">Enter email</string>
+    <string name="enter_password">Enter password</string>
+    <string name="login_successful">Login Successful</string>
+    <string name="authentication_failed">Authentication failed.</string>
+    <string name="enter_user">Enter user</string>
+    <string name="account_created">Account created.</string>
 </resources>
