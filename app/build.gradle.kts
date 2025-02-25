@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.annotation)
     implementation(libs.activity)
+    implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
