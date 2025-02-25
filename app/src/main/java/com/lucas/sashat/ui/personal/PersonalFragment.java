@@ -12,12 +12,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.lucas.sashat.Book;
+import com.lucas.sashat.BookAdapter;
 import com.lucas.sashat.R;
 import com.lucas.sashat.databinding.FragmentNotificationsBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PersonalFragment extends Fragment {
     private TextView usernameTextView, bioTextView;
