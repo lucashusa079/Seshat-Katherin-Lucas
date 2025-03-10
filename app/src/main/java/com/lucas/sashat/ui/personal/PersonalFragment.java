@@ -1,11 +1,13 @@
 package com.lucas.sashat.ui.personal;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -13,71 +15,49 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.lucas.sashat.Book;
-import com.lucas.sashat.BookAdapter;
 import com.lucas.sashat.R;
-import com.lucas.sashat.databinding.FragmentNotificationsBinding;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.lucas.sashat.databinding.FragmentPersonalBinding;
+import com.lucas.sashat.ui.login.LoginActivity;
 
 public class PersonalFragment extends Fragment {
     private TextView usernameTextView, bioTextView;
     private RecyclerView booksRecyclerView;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_personal, container, false);
+    private @NonNull FragmentPersonalBinding binding;
+    private FirebaseAuth mAuth;
 
-        usernameTextView = rootView.findViewById(R.id.username_text_view);
-        bioTextView = rootView.findViewById(R.id.bio_text_view);
-        booksRecyclerView = rootView.findViewById(R.id.books_recycler_view);
 
-        // Aquí mostrarías la información personal del usuario
-        loadUserData();
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        // Inicializar FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
+
+        PersonalViewModel homeViewModel =
+                new ViewModelProvider(this).get(PersonalViewModel.class);
+
+        binding = FragmentPersonalBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
+        // Configurar el botón de cerrar sesión
+        Button btnLogout = binding.getRoot().findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(v -> {
+            // Cerrar sesión
+            mAuth.signOut();
+            Toast.makeText(getContext(), "Sesión cerrada", Toast.LENGTH_SHORT).show();
+
+            // Redirigir a la pantalla de inicio de sesión
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();  // Finalizar la actividad actual
+        });
+
+        return root;
+    }
+
+
+    /*
+    *  View rootView = inflater.inflate(R.layout.fragment_personal, container, false);
 
         return rootView;
-    }
-
-    private void loadUserData() {
-        // Obtener datos del usuario de Firestore (su nombre, bio, libros leídos, etc.)
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        db.collection("Users").document(userID).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    String username = documentSnapshot.getString("username");
-                    String bio = documentSnapshot.getString("bio");
-
-                    usernameTextView.setText(username);
-                    bioTextView.setText(bio);
-
-                    // Cargar los libros del usuario (leídos, en lectura, por leer)
-                    loadBooks(userID);
-                })
-                .addOnFailureListener(e -> Log.e("PersonalFragment", "Error al cargar los datos del usuario", e));
-    }
-
-    private void loadBooks(String userID) {
-        // Aquí puedes cargar los libros del usuario de Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Ejemplo para cargar libros leídos
-        db.collection("Users").document(userID)
-                .collection("books")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Book> books = new ArrayList<>();
-                    for (DocumentSnapshot document : queryDocumentSnapshots) {
-                        Book book = document.toObject(Book.class);
-                        books.add(book);
-                    }
-
-                    // Actualizar el RecyclerView con los libros
-                    booksRecyclerView.setAdapter(new BookAdapter(getContext(), books));
-                })
-                .addOnFailureListener(e -> Log.e("PersonalFragment", "Error al cargar los libros", e));
-    }
+    * */
 }

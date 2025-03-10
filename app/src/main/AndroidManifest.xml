@@ -13,9 +13,6 @@
         android:theme="@style/Theme.Sashat"
         tools:targetApi="31">
         <activity
-            android:name=".ui.register.RegisterActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.login.LoginActivity"
             android:theme="@style/Theme.Sashat">
         </activity>

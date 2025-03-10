@@ -1,5 +1,6 @@
 package com.lucas.sashat.ui.search;
 
+import com.lucas.sashat.BookAdapter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -43,6 +44,9 @@ public class SearchFragment extends Fragment {
         bookList.add(new Book("El Señor de los Anillos", "J.R.R. Tolkien", "Fantasía", R.drawable.import_contacts_24px));
         bookList.add(new Book("Cien Años de Soledad", "Gabriel García Márquez", "Realismo Mágico", R.drawable.import_contacts_24px));
         bookList.add(new Book("1984", "George Orwell", "Distopía", R.drawable.import_contacts_24px));
+        bookList.add(new Book("Tirant lo blanc", "yo", "Fantasía", R.drawable.import_contacts_24px));
+        bookList.add(new Book("La vida despues de la Muerte", "TurtleMe", "Fantasia", R.drawable.import_contacts_24px));
+        bookList.add(new Book("aksosfjqoiw", "Anton Dalmau", "Terror", R.drawable.import_contacts_24px));
 
         // Vincular el adaptador al RecyclerView
         BookAdapter adapter = new BookAdapter(bookList);
@@ -87,7 +91,7 @@ public class SearchFragment extends Fragment {
         });
 
         return rootView;
-        */
+
     }
 
     private void searchBooks(String query) {
@@ -107,4 +111,6 @@ public class SearchFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> Log.e("SearchFragment", "Error al buscar libros", e));
     }
+
+     */
 }

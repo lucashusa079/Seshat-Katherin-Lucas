@@ -11,4 +11,7 @@
     <color name="book_placeholder_color">#99898989</color>
     <color name="negro_carbon">#121212</color>
     <color name="ambar">#D5AF4F</color>
+    <color name="fondo">#525252</color>
+    <color name="background">#FFFFFFFF</color>
+    <color name="background_card">#FFFFFFFF</color>
 </resources>
