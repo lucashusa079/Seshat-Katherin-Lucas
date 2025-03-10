@@ -1,4 +1,4 @@
-package com.lucas.sashat.ui.home;
+package com.lucas.sashat.ui.personal;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,30 +12,31 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.lucas.sashat.R;
+import com.lucas.sashat.databinding.FragmentPersonalBinding;
 import com.lucas.sashat.ui.login.LoginActivity;
-import com.lucas.sashat.databinding.FragmentHomeBinding;
 
-public class HomeFragment extends Fragment {
+public class PersonalFragment extends Fragment {
+    private TextView usernameTextView, bioTextView;
+    private RecyclerView booksRecyclerView;
 
-    private FragmentHomeBinding binding;
+    private @NonNull FragmentPersonalBinding binding;
     private FirebaseAuth mAuth;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Inicializar FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        PersonalViewModel homeViewModel =
+                new ViewModelProvider(this).get(PersonalViewModel.class);
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentPersonalBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         // Configurar el botón de cerrar sesión
         Button btnLogout = binding.getRoot().findViewById(R.id.btnLogout);
@@ -53,9 +54,10 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
+
+    /*
+    *  View rootView = inflater.inflate(R.layout.fragment_personal, container, false);
+
+        return rootView;
+    * */
 }
