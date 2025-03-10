@@ -14,4 +14,5 @@
     <color name="fondo">#525252</color>
     <color name="background">#FFFFFFFF</color>
     <color name="background_card">#FFFFFFFF</color>
+    <color name="test">#A93BD2</color>
 </resources>
