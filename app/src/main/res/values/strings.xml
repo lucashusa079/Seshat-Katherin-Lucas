@@ -43,5 +43,4 @@
     <string name="cancelar">Cancelar</string>
     <string name="correo_enviado">Correo enviado. Revisa tu bandeja de entrada.</string>
     <string name="error_correo">Error al enviar el correo</string>
-
 </resources>
