@@ -4,4 +4,6 @@
     <color name="book_placeholder_color">#99EDEDED</color>
     <color name="background">#121212</color>
     <color name="background_card">#121212</color>
+    <color name="text">#FFFFFF</color>
+    <color name="textBtn">#D5AF4F</color>
 </resources>

@@ -43,4 +43,16 @@
     <string name="cancelar">Cancelar</string>
     <string name="correo_enviado">Correo enviado. Revisa tu bandeja de entrada.</string>
     <string name="error_correo">Error al enviar el correo</string>
+    <string name="profile">profile\n</string>
+    <string name="books_read">books read</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="read">Read</string>
+    <string name="reading">Reading</string>
+    <string name="pending_read">Pending read</string>
+    <string name="username">username</string>
+    <string name="description">Description</string>
+    <string name="follow">Follow</string>
+    <string name="follow_">Follow</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="change_photo">Change photo</string>
 </resources>

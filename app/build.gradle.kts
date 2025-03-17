@@ -26,10 +26,12 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         viewBinding = true
         dataBinding = true
@@ -37,9 +39,7 @@ android {
 }
 
 dependencies {
-
-    implementation("com.google.firebase:firebase-storage:20.3.0")
-
+    implementation(libs.firebase.storage)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -49,6 +49,12 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.annotation)
     implementation(libs.activity)
+    implementation (libs.com.squareup.retrofit2.retrofit2)
+    implementation (libs.retrofit2.converter.gson)
+    implementation (libs.okhttp)
+    implementation (libs.picasso)
+    implementation ("com.github.bumptech.glide:glide:4.13.2")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.13.2 ")
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
     testImplementation(libs.junit)
