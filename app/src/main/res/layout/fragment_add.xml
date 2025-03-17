@@ -32,15 +32,18 @@
                     android:id="@+id/book_image"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/ic_book_placeholder"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="26dp"
                     android:contentDescription="Imagen del libro"
-                    android:layout_marginEnd="16dp"/>
+                    android:src="@drawable/ic_book_placeholder" />
 
                 <Button
                     android:id="@+id/select_image_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Subir Imagen"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"/>
 
             </LinearLayout>

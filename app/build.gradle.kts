@@ -39,6 +39,10 @@ android {
 dependencies {
 
     implementation("com.google.firebase:firebase-storage:20.3.0")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+    implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
+
 
     implementation(libs.appcompat)
     implementation(libs.material)

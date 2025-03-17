@@ -1,82 +1,64 @@
+/*
 package com.lucas.sashat;
+
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
+    private Context context;
     private List<Book> bookList;
 
-    public BookAdapter(List<Book> bookList) {
+    public BookAdapter(Context context, List<Book> bookList) {
+        this.context = context;
         this.bookList = bookList;
     }
 
-    // ViewHolder para vincular los elementos de item_book_search.xml
-    public static class BookViewHolder extends RecyclerView.ViewHolder {
-        public ImageView bookImage;
-        public TextView bookTitle;
-        public TextView bookAuthor;
-        public TextView bookGenre;
-        public Button btnRead;
-        public Button btnToRead;
-        public Button btnReading;
-
-        public BookViewHolder(View itemView) {
-            super(itemView);
-            bookImage = itemView.findViewById(R.id.book_image);
-            bookTitle = itemView.findViewById(R.id.book_title);
-            bookAuthor = itemView.findViewById(R.id.book_author);
-            bookGenre = itemView.findViewById(R.id.book_genre);
-            btnRead = itemView.findViewById(R.id.btn_read);
-            btnToRead = itemView.findViewById(R.id.btn_to_read);
-            btnReading = itemView.findViewById(R.id.btn_reading);
-        }
-    }
-
+    @NonNull
     @Override
-    public BookViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_book_search, parent, false);
+    public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_book_search, parent, false);
         return new BookViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(BookViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
         Book book = bookList.get(position);
-        holder.bookImage.setImageResource(book.getImageResId());
         holder.bookTitle.setText(book.getTitle());
         holder.bookAuthor.setText(book.getAuthor());
-        holder.bookGenre.setText(book.getGenre());
+        holder.bookGenre.setText(String.join(", ", book.getGenre())); // Convertir lista a String
 
-        // Ejemplo de acción en los botones (opcional)
-        holder.btnRead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println(book.getTitle() + " marcado como Leído");
-            }
-        });
-
-        holder.btnToRead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println(book.getTitle() + " marcado como Por Leer");
-            }
-        });
-
-        holder.btnReading.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println(book.getTitle() + " marcado como Leyendo");
-            }
-        });
+        // Cargar imagen con Glide
+        Glide.with(context)
+                .load(book.getCoverImage())
+                .placeholder(R.drawable.import_contacts_24px) // Imagen de carga
+                .into(holder.bookImage);
     }
 
     @Override
     public int getItemCount() {
         return bookList.size();
     }
+
+    static class BookViewHolder extends RecyclerView.ViewHolder {
+        TextView bookTitle, bookAuthor, bookGenre;
+        ImageView bookImage;
+
+        public BookViewHolder(@NonNull View itemView) {
+            super(itemView);
+            bookTitle = itemView.findViewById(R.id.book_title);
+            bookAuthor = itemView.findViewById(R.id.book_author);
+            bookGenre = itemView.findViewById(R.id.book_genre);
+            bookImage = itemView.findViewById(R.id.book_image);
+        }
+    }
 }
+
+*/

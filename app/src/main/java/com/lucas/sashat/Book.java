@@ -1,31 +1,26 @@
 package com.lucas.sashat;
 
+import java.util.List;
+
 public class Book {
     private String title;
     private String author;
-    private String genre;
-    private int imageResId;
+    private List<String> genre;
+    private String coverImage;
 
-    public Book(String title, String author, String genre, int imageResId) {
+    // Constructor vacío necesario para Firestore
+    public Book() { }
+
+    public Book(String title, String author, List<String> genre, String coverImage) {
         this.title = title;
         this.author = author;
         this.genre = genre;
-        this.imageResId = imageResId;
+        this.coverImage = coverImage;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public int getImageResId() {
-        return imageResId;
-    }
+    // Getters y setters
+    public String getTitle() { return title; }
+    public String getAuthor() { return author; }
+    public List<String> getGenre() { return genre; }
+    public String getCoverImage() { return coverImage; }
 }
