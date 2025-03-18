@@ -29,9 +29,16 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.lucas.sashat.ui.personal.ProfileFragment"
-        android:label="Profile">
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" >
+
         <action
             android:id="@+id/action_profileFragment_to_personalFragment"
         app:destination="@id/navigation_personal" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.lucas.sashat.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

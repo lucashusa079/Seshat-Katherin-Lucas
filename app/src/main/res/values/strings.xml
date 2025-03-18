@@ -55,4 +55,10 @@
     <string name="follow_">Follow</string>
     <string name="unfollow">Unfollow</string>
     <string name="change_photo">Change photo</string>
+    <string name="settings">Settings</string>
+    <string name="night_mode">Night Mode</string>
+    <string name="notifications">Notifications</string>
+    <string name="language">Language</string>
+    <string name="log_out">Log Out</string>
+    <string name="choose_language">Choose language</string>
 </resources>

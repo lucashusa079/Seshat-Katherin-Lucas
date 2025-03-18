@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_settings"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context=".ui.settings.SettingsFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivAtras"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="14dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/settings"
+            android:textColor="@color/text"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/settings"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="80dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/round_back_white10_20"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <!-- Night Mode -->
+                <RelativeLayout
+                    android:id="@+id/rlNightMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/night_mode">
+
+                    <ImageView
+                        android:id="@+id/nightModeIcon"
+                        android:layout_width="50dp"
+                        android:layout_height="45dp"
+                        android:contentDescription="@string/night_mode"
+                        android:padding="12dp"
+                        android:src="@drawable/dark_mode" />
+
+                    <TextView
+                        android:id="@+id/tvNightMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_toEndOf="@id/nightModeIcon"
+                        android:text="@string/night_mode"
+                        android:textColor="@color/text"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:ignore="RelativeOverlap" />
+
+                </RelativeLayout>
+
+                <!-- Notifications -->
+                <RelativeLayout
+                    android:id="@+id/rlNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/notificationsIcon"
+                        android:layout_width="50dp"
+                        android:layout_height="45dp"
+                        android:padding="12dp"
+                        android:src="@drawable/notifications" />
+
+                    <TextView
+                        android:id="@+id/tvNotification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_toEndOf="@id/notificationsIcon"
+                        android:text="@string/notifications"
+                        android:textColor="@color/text"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/round_back_white10_20"
+                android:orientation="vertical"
+                android:padding="15dp">
+                <!-- Language -->
+                <RelativeLayout
+                    android:id="@+id/rlLanguage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp">
+
+                    <ImageView
+                        android:id="@+id/languageIcon"
+                        android:layout_width="50dp"
+                        android:layout_height="45dp"
+                        android:padding="12dp"
+                        android:src="@drawable/language" />
+
+                    <TextView
+                        android:id="@+id/tvLanguage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_toEndOf="@+id/languageIcon"
+                        android:text="@string/language"
+                        android:textColor="@color/text"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+                <!-- Log out -->
+                <RelativeLayout
+                    android:id="@+id/rlLogOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:id="@+id/logoutIcon"
+                        android:layout_width="50dp"
+                        android:layout_height="45dp"
+                        android:padding="12dp"
+                        android:src="@drawable/power" />
+
+                    <TextView
+                        android:id="@+id/tvLogout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_toEndOf="@+id/logoutIcon"
+                        android:importantForAccessibility="no"
+                        android:text="@string/log_out"
+                        android:textColor="@color/text"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

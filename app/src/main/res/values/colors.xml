@@ -17,4 +17,5 @@
     <color name="test">#A93BD2</color>
     <color name="text">#FF000000</color>
     <color name="textBtn">#D99E00</color>
+    <color name="fondoSettings">#99B6B6B6</color>
 </resources>
