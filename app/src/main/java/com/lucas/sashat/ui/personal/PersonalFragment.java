@@ -15,13 +15,17 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.lucas.sashat.R;
+import com.lucas.sashat.ui.books.ViewPagerAdapter;
 
 import java.util.HashMap;
 
@@ -31,8 +35,10 @@ public class PersonalFragment extends Fragment {
     private String currentUserId;
     private String viewedUserId;
     private TextView usernameTextView, bioTextView, followersCount, followingCount;
-    private ImageView profileImageView;
-    private Button followButton, editProfileButton, btnMenu;
+    private ImageView profileImageView, btnMenu;
+    private Button followButton, editProfileButton;
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
 
     public PersonalFragment() {
     }
@@ -77,6 +83,30 @@ public class PersonalFragment extends Fragment {
             NavController navController = NavHostFragment.findNavController(PersonalFragment.this);
             navController.navigate(R.id.settingsFragment);
         });
+
+
+        viewPager = view.findViewById(R.id.viewPager);
+        tabLayout = view.findViewById(R.id.tabLayout);
+
+        // Configura el ViewPager2 con el Adapter
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity());
+        viewPager.setAdapter(adapter);
+
+        // Vincula TabLayout con ViewPager2
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> {
+                    switch (position) {
+                        case 0:
+                            tab.setText(R.string.read);
+                            break;
+                        case 1:
+                            tab.setText(R.string.reading);
+                            break;
+                        case 2:
+                            tab.setText(R.string.pending_read);
+                            break;
+                    }
+                }).attach();
 
         return view;
     }

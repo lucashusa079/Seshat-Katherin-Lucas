@@ -40,18 +40,6 @@
             app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btnMenu"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/background"
-            app:icon="@drawable/baseline_menu_24"
-            app:iconTint="@color/text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:strokeColor="@color/background"
-            app:strokeWidth="2dp" />
-
         <TextView
             android:id="@+id/tvNumSeguidores"
             android:layout_width="wrap_content"
@@ -177,5 +165,16 @@
             app:cornerRadius="50dp"
             app:layout_constraintStart_toEndOf="@+id/btnEditar"
             app:layout_constraintTop_toBottomOf="@+id/tvDescripción"/>
+
+        <ImageView
+            android:id="@+id/btnMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:clickable="true"
+            android:src="@drawable/baseline_menu_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

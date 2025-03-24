@@ -1,4 +1,4 @@
-package com.lucas.sashat.ui.personal;
+package com.lucas.sashat.ui.books;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
