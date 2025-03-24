@@ -61,4 +61,8 @@
     <string name="language">Language</string>
     <string name="log_out">Log Out</string>
     <string name="choose_language">Choose language</string>
+    <string name="username_exists">username exists</string>
+    <string name="email_verification_sent">email verification sent</string>
+    <string name="email_verification_failed">email verification failed</string>
+    <string name="error_checking_username">error the user name is already in use</string>
 </resources>

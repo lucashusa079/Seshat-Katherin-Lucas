@@ -26,7 +26,7 @@ public class FirebaseFirestoreHelper {
     // USUARIOS
     // --------------------
 
-    public void addUser(String userId, String email, String username, String photoUrl, String description) {
+    public void addUser(String userId, String email, String username, String photoUrl, String description, String s) {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("username", username);

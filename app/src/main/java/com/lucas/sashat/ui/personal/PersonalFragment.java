@@ -30,7 +30,7 @@ public class PersonalFragment extends Fragment {
     private FirebaseFirestore db;
     private String currentUserId;
     private String viewedUserId;
-    private TextView usernameTextView, bioTextView, followersTextView, followingTextView;
+    private TextView usernameTextView, bioTextView, followersCount, followingCount;
     private ImageView profileImageView;
     private Button followButton, editProfileButton, btnMenu;
 
@@ -48,17 +48,17 @@ public class PersonalFragment extends Fragment {
         btnMenu = view.findViewById(R.id.btnMenu);
         usernameTextView = view.findViewById(R.id.tvUsername);
         bioTextView = view.findViewById(R.id.tvDescripción);
-        followersTextView = view.findViewById(R.id.tvNumSeguidores);
+        followersCount = view.findViewById(R.id.tvNumSeguidores);
         profileImageView = view.findViewById(R.id.ivProfileImage);
         followButton = view.findViewById(R.id.btnFollow);
         editProfileButton = view.findViewById(R.id.btnEditar);
-        followingTextView = view.findViewById(R.id.tvNumFollowed);
+        followingCount = view.findViewById(R.id.tvNumFollowed);
 
         viewedUserId = getArguments() != null ? getArguments().getString("userId") : currentUserId;
 
-        loadUserProfile();
+        loadUserProfileRealtime();
         setupFollowersListener();
-
+        loadFollowCounts();
         if (!viewedUserId.equals(currentUserId)) {
             checkFollowingStatus();
             followButton.setOnClickListener(v -> handleFollowAction());
@@ -81,113 +81,104 @@ public class PersonalFragment extends Fragment {
         return view;
     }
 
+    public void loadUserProfileRealtime() {
+        DocumentReference userRef = db.collection("users").document(viewedUserId);
 
-    public void loadUserProfile() {
-        if (getArguments() != null) {
-            usernameTextView.setText(getArguments().getString("username"));
-            bioTextView.setText(getArguments().getString("description"));
-        }
+        userRef.addSnapshotListener((documentSnapshot, e) -> {
+            if (e != null) {
+                Log.e("Firestore", "Error al obtener datos en tiempo real", e);
+                return;
+            }
 
-        db.collection("users").document(viewedUserId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String imageUriString = documentSnapshot.getString("profileImageUri");
-                        if (imageUriString != null && !imageUriString.isEmpty()) {
-                            Glide.with(this).load(Uri.parse(imageUriString)).into(profileImageView);
-                        }
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                usernameTextView.setText(documentSnapshot.getString("username"));
+                bioTextView.setText(documentSnapshot.getString("description"));
+                followersCount.setText(String.valueOf(documentSnapshot.getLong("followersCount")));
+
+                Glide.with(PersonalFragment.this)
+                        .load(documentSnapshot.getString("photoUrl"))
+                        .into(profileImageView);
+            }
+        });
+    }
+
+    public void setupFollowersListener() {
+        // Configurar el listener para los seguidores (si es necesario)
+    }
+
+    private void loadFollowCounts() {
+        // Cargar el número de seguidores
+        db.collection("users").document(viewedUserId).collection("followers")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int followers = task.getResult().size();
+                        followersCount.setText(String.valueOf(followers));
                     }
                 });
 
+        // Cargar el número de seguidos
+        db.collection("users").document(viewedUserId).collection("following")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int following = task.getResult().size();
+                        followingCount.setText(String.valueOf(following));
+                    }
+                });
     }
 
-    private void saveImageUriToFirestore(Uri imageUri) {
-        FirebaseFirestore.getInstance().collection("users")
+    public void checkFollowingStatus() {
+        db.collection("users")
                 .document(currentUserId)
-                .update("profileImageUri", imageUri.toString())
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "URI de imagen guardada"))
-                .addOnFailureListener(e -> Log.e("Firestore", "Error al guardar URI", e));
-    }
-
-    private void checkFollowingStatus() {
-        db.collection("users").document(currentUserId)
-                .collection("following").document(viewedUserId)
-                .get().addOnSuccessListener(documentSnapshot -> {
+                .collection("following")
+                .document(viewedUserId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        followButton.setText("Siguiendo");
+                        followButton.setText("Dejar de seguir");
                     } else {
                         followButton.setText("Seguir");
                     }
                 });
     }
 
-    private void handleFollowAction() {
-        DocumentReference followingRef = db.collection("users").document(currentUserId)
-                .collection("following").document(viewedUserId);
-        DocumentReference followerRef = db.collection("users").document(viewedUserId)
-                .collection("followers").document(currentUserId);
+    public void handleFollowAction() {
+        DocumentReference userRef = db.collection("users").document(currentUserId);
 
-        followingRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                // Dejar de seguir
-                followingRef.delete();
-                followerRef.delete();
-                updateFollowersCount(viewedUserId, -1);
-                followButton.setText("Seguir");
-            } else {
-                // Seguir
-                followingRef.set(new HashMap<>());
-                followerRef.set(new HashMap<>());
-                updateFollowersCount(viewedUserId, 1);
-                followButton.setText("Siguiendo");
-            }
-
-            // 🔹 Recargar perfil para actualizar UI
-            loadUserProfile();
-        });
+        userRef.collection("following").document(viewedUserId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        unfollowUser();
+                    } else {
+                        followUser();
+                    }
+                });
     }
 
-    private void setupFollowersListener() {
-        DocumentReference userRef = db.collection("users").document(viewedUserId);
-
-        userRef.addSnapshotListener((documentSnapshot, e) -> {
-            if (e != null) {
-                Log.e("Firestore", "Error al obtener seguidores", e);
-                return;
-            }
-
-            if (documentSnapshot != null && documentSnapshot.exists()) {
-                // 🔹 Actualizar followers
-                Long followersCount = documentSnapshot.contains("followersCount")
-                        ? documentSnapshot.getLong("followersCount")
-                        : 0;
-                followersTextView.setText(String.valueOf(followersCount));
-
-                // 🔹 Actualizar following
-                Long followingCount = documentSnapshot.contains("followingCount")
-                        ? documentSnapshot.getLong("followingCount")
-                        : 0;
-                followingTextView.setText(String.valueOf(followingCount));
-
-                Log.d("Firestore", "Seguidores: " + followersCount + " - Siguiendo: " + followingCount);
-            }
-        });
+    public void followUser() {
+        DocumentReference userRef = db.collection("users").document(currentUserId);
+        userRef.collection("following").document(viewedUserId)
+                .set(new HashMap<>())
+                .addOnSuccessListener(aVoid -> {
+                    followButton.setText("Dejar de seguir");
+                    updateFollowersCount(viewedUserId, 1);
+                });
     }
 
+    public void unfollowUser() {
+        DocumentReference userRef = db.collection("users").document(currentUserId);
+        userRef.collection("following").document(viewedUserId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    followButton.setText("Seguir");
+                    updateFollowersCount(viewedUserId, -1);
+                });
+    }
 
-    private void updateFollowersCount(String userId, int delta) {
+    public void updateFollowersCount(String userId, int change) {
         DocumentReference userRef = db.collection("users").document(userId);
-        userRef.update("followersCount", FieldValue.increment(delta))
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "FollowersCount actualizado en Firestore"))
-                .addOnFailureListener(e -> Log.e("Firestore", "Error actualizando followersCount", e));
-
-        // 🔹 También actualizar "followingCount" del usuario actual
-        if (userId.equals(viewedUserId)) {
-            db.collection("users").document(currentUserId)
-                    .update("followingCount", FieldValue.increment(delta))
-                    .addOnSuccessListener(aVoid -> Log.d("Firestore", "FollowingCount actualizado en Firestore"))
-                    .addOnFailureListener(e -> Log.e("Firestore", "Error actualizando followingCount", e));
-        }
+        userRef.update("followersCount", FieldValue.increment(change));
     }
-
-
 }
