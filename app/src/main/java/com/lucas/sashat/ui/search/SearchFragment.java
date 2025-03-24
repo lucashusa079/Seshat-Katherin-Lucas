@@ -1,4 +1,10 @@
 package com.lucas.sashat.ui.search;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,16 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.CollectionReference;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -32,12 +30,14 @@ import java.util.List;
 
 public class SearchFragment extends Fragment {
     private RecyclerView recyclerView;
-    private BookAdapter adapter; // Adaptador personalizado
+    private SearchView searchView;
+    private BookAdapter adapter;
     private List<Book> bookList = new ArrayList<>();
     private FirebaseFirestore db;
     private DocumentSnapshot lastVisible;
     private boolean isLoading = false;
-    private static final int PAGE_SIZE = 20;
+    private static final int PAGE_SIZE = 10; // Reducido para carga más rápida
+    private String currentQuery = "";
 
     @Nullable
     @Override
@@ -45,6 +45,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         recyclerView = view.findViewById(R.id.recycler_view);
+        searchView = view.findViewById(R.id.search_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new BookAdapter(bookList);
         recyclerView.setAdapter(adapter);
@@ -60,9 +61,23 @@ public class SearchFragment extends Fragment {
                 int totalItemCount = layoutManager.getItemCount();
                 int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-                if (!isLoading && totalItemCount <= (lastVisibleItem + 10)) {
+                if (!isLoading && totalItemCount <= (lastVisibleItem + 3)) { // Umbral bajo para precargar
                     loadMoreBooks();
                 }
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                performSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                performSearch(newText);
+                return true;
             }
         });
 
@@ -71,22 +86,25 @@ public class SearchFragment extends Fragment {
 
     private void loadInitialBooks() {
         isLoading = true;
-        Query query = db.collection("books")
-                .orderBy("title")
-                .limit(PAGE_SIZE);
+        adapter.setLoading(true);
+        Query query = buildQuery(currentQuery, null);
 
-        query.get(Source.CACHE).addOnSuccessListener(queryDocumentSnapshots -> {
-            if (queryDocumentSnapshots.isEmpty()) {
-                // Si no hay datos en caché, consulta al servidor
-                query.get(Source.SERVER).addOnSuccessListener(serverSnapshots -> {
-                    processQueryResults(serverSnapshots);
-                });
-            } else {
-                processQueryResults(queryDocumentSnapshots);
-            }
+        long startTime = System.currentTimeMillis();
+        query.get(Source.CACHE).addOnSuccessListener(cachedSnapshots -> {
+            processQueryResults(cachedSnapshots, startTime);
+            // Actualizar desde el servidor en segundo plano
+            query.get(Source.SERVER).addOnSuccessListener(serverSnapshots -> {
+                updateQueryResults(serverSnapshots, startTime);
+            });
         }).addOnFailureListener(e -> {
-            Log.e("SearchFragment", "Error loading books", e);
-            isLoading = false;
+            Log.e("SearchFragment", "Error loading from cache", e);
+            query.get(Source.SERVER).addOnSuccessListener(serverSnapshots -> {
+                processQueryResults(serverSnapshots, startTime);
+            }).addOnFailureListener(e2 -> {
+                Log.e("SearchFragment", "Error loading from server", e2);
+                adapter.setLoading(false);
+                isLoading = false;
+            });
         });
     }
 
@@ -94,62 +112,125 @@ public class SearchFragment extends Fragment {
         if (lastVisible == null || isLoading) return;
 
         isLoading = true;
-        Query query = db.collection("books")
-                .orderBy("title")
-                .startAfter(lastVisible)
-                .limit(PAGE_SIZE);
+        adapter.setLoading(true);
+        Query query = buildQuery(currentQuery, lastVisible);
 
-        query.get(Source.CACHE).addOnSuccessListener(queryDocumentSnapshots -> {
-            if (queryDocumentSnapshots.isEmpty()) {
-                query.get(Source.SERVER).addOnSuccessListener(serverSnapshots -> {
-                    processQueryResults(serverSnapshots);
-                });
-            } else {
-                processQueryResults(queryDocumentSnapshots);
-            }
+        long startTime = System.currentTimeMillis();
+        query.get(Source.CACHE).addOnSuccessListener(cachedSnapshots -> {
+            processQueryResults(cachedSnapshots, startTime);
+            query.get(Source.SERVER).addOnSuccessListener(serverSnapshots -> {
+                updateQueryResults(serverSnapshots, startTime);
+            });
         }).addOnFailureListener(e -> {
-            Log.e("SearchFragment", "Error loading more books", e);
-            isLoading = false;
+            query.get(Source.SERVER).addOnSuccessListener(serverSnapshots -> {
+                processQueryResults(serverSnapshots, startTime);
+            }).addOnFailureListener(e2 -> {
+                Log.e("SearchFragment", "Error loading more books", e2);
+                adapter.setLoading(false);
+                isLoading = false;
+            });
         });
     }
 
-    private void processQueryResults(QuerySnapshot queryDocumentSnapshots) {
-        int startPosition = bookList.size();
-        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-            bookList.add(document.toObject(Book.class));
+    private Query buildQuery(String searchText, DocumentSnapshot startAfter) {
+        Query query = db.collection("books")
+                .orderBy("title")
+                .limit(PAGE_SIZE); // Ordenar por title sin select()
+        if (startAfter != null) {
+            query = query.startAfter(startAfter);
         }
+        return query;
+    }
+
+    private void performSearch(String queryText) {
+        currentQuery = queryText.trim();
+        bookList.clear();
+        lastVisible = null;
+        adapter.notifyDataSetChanged();
+        loadInitialBooks();
+    }
+
+    private void processQueryResults(QuerySnapshot queryDocumentSnapshots, long startTime) {
+        int startPosition = bookList.size();
+        String searchLower = currentQuery.toLowerCase();
+
+        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+            Book book = document.toObject(Book.class);
+            String titleLower = book.getTitle().toLowerCase();
+            String authorLower = book.getAuthor().toLowerCase();
+
+            if (searchLower.isEmpty() ||
+                    titleLower.contains(searchLower) ||
+                    authorLower.contains(searchLower)) {
+                bookList.add(book);
+            }
+        }
+
         if (!queryDocumentSnapshots.isEmpty()) {
             lastVisible = queryDocumentSnapshots.getDocuments()
                     .get(queryDocumentSnapshots.size() - 1);
         }
-        adapter.notifyItemRangeInserted(startPosition, queryDocumentSnapshots.size());
+
+        adapter.notifyItemRangeInserted(startPosition, bookList.size() - startPosition);
+        adapter.setLoading(false);
         isLoading = false;
+        long endTime = System.currentTimeMillis();
+        Log.d("SearchFragment", "Load time: " + (endTime - startTime) + "ms, Books found: " + bookList.size());
+    }
+
+    private void updateQueryResults(QuerySnapshot queryDocumentSnapshots, long startTime) {
+        bookList.clear();
+        processQueryResults(queryDocumentSnapshots, startTime);
     }
 
     // Adaptador personalizado
-    public static class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
+    public static class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private static final int TYPE_BOOK = 0;
+        private static final int TYPE_LOADING = 1;
         private List<Book> books;
+        private boolean showLoading = false;
 
         public BookAdapter(List<Book> books) {
             this.books = books;
         }
 
-        @NonNull
-        @Override
-        public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_book_search, parent, false);
-            return new BookViewHolder(view);
+        public void setLoading(boolean loading) {
+            showLoading = loading;
+            notifyDataSetChanged();
         }
 
         @Override
-        public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
-            holder.bind(books.get(position));
+        public int getItemViewType(int position) {
+            if (position == books.size() && showLoading) {
+                return TYPE_LOADING;
+            }
+            return TYPE_BOOK;
+        }
+
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            if (viewType == TYPE_BOOK) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_book_search, parent, false);
+                return new BookViewHolder(view);
+            } else {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_loading, parent, false);
+                return new LoadingViewHolder(view);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof BookViewHolder) {
+                ((BookViewHolder) holder).bind(books.get(position));
+            }
         }
 
         @Override
         public int getItemCount() {
-            return books.size();
+            return showLoading ? books.size() + 1 : books.size();
         }
     }
 
@@ -169,11 +250,25 @@ public class SearchFragment extends Fragment {
 
         public void bind(Book book) {
             bookTitle.setText(book.getTitle());
-            bookAuthor.setText(book.getAuthor());
-            bookGenre.setText(String.join(", ", book.getGenre()));
+            String author = book.getAuthor();
+            if (author != null && !author.isEmpty()) {
+                bookAuthor.setText(author);
+            } else {
+                bookAuthor.setText("");
+            }
+            bookGenre.setText(book.getGenre() != null ? String.join(", ", book.getGenre()) : "");
             Glide.with(itemView.getContext())
                     .load(book.getCoverImage())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .override(100, 100)
+                    .placeholder(android.R.drawable.ic_menu_gallery)
                     .into(bookImage);
+        }
+    }
+
+    public static class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

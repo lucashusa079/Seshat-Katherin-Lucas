@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:queryHint="Buscar libros..." />
+        android:queryHint="Buscar por título o autor" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
