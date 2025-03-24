@@ -80,53 +80,36 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            // Convertir el nombre de usuario a minúsculas
-            String userLower = user.toLowerCase();
+            // Registrar usuario directamente sin verificar si el nombre de usuario ya existe
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                            if (firebaseUser != null) {
+                                String userId = firebaseUser.getUid();
 
-            // Verificar si el nombre de usuario ya existe en Firestore
-            db.collection("users")
-                    .whereEqualTo("username_lower", userLower) // Comparación insensible a mayúsculas
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                                Toast.makeText(RegisterActivity.this, R.string.username_exists, Toast.LENGTH_SHORT).show();
-                            } else {
-                                // Registrar usuario
-                                mAuth.createUserWithEmailAndPassword(email, password)
-                                        .addOnCompleteListener(task1 -> {
-                                            if (task1.isSuccessful()) {
-                                                FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                                                if (firebaseUser != null) {
-                                                    String userId = firebaseUser.getUid();
+                                // Guardar en Firestore
+                                firestoreHelper.addUser(userId, email, user, user.toLowerCase(), "", "");
 
-                                                    // Guardar en Firestore con el nombre en minúsculas
-                                                    firestoreHelper.addUser(userId, email, user, userLower, "", "");
-
-                                                    // Enviar email de verificación
-                                                    firebaseUser.sendEmailVerification()
-                                                            .addOnCompleteListener(task2 -> {
-                                                                if (task2.isSuccessful()) {
-                                                                    Toast.makeText(RegisterActivity.this, R.string.email_verification_sent, Toast.LENGTH_SHORT).show();
-                                                                } else {
-                                                                    Toast.makeText(RegisterActivity.this, R.string.email_verification_failed, Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            });
-
-                                                    Toast.makeText(RegisterActivity.this, R.string.account_created, Toast.LENGTH_SHORT).show();
-                                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                                    finish();
-                                                }
+                                // Enviar email de verificación
+                                firebaseUser.sendEmailVerification()
+                                        .addOnCompleteListener(task2 -> {
+                                            if (task2.isSuccessful()) {
+                                                Toast.makeText(RegisterActivity.this, R.string.email_verification_sent, Toast.LENGTH_SHORT).show();
                                             } else {
-                                                Toast.makeText(RegisterActivity.this, R.string.authentication_failed, Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(RegisterActivity.this, R.string.email_verification_failed, Toast.LENGTH_SHORT).show();
                                             }
                                         });
+
+                                Toast.makeText(RegisterActivity.this, R.string.account_created, Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                finish();
                             }
                         } else {
-                            Toast.makeText(RegisterActivity.this, R.string.error_checking_username, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, R.string.authentication_failed, Toast.LENGTH_SHORT).show();
                         }
                     });
         });
+
     }
 }
