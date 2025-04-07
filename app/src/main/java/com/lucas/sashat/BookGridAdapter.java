@@ -1,3 +1,5 @@
+/*
+
 package com.lucas.sashat;
 
 import android.view.LayoutInflater;
@@ -41,4 +43,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.BookGr
     public int getItemCount() {
         return bookList.size();
     }
+
 }
+
+*/
