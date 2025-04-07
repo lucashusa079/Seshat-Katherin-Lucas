@@ -16,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.lucas.sashat.MainActivity;
 import com.lucas.sashat.R;
 import com.lucas.sashat.firebase.FirebaseFirestoreHelper;
@@ -27,6 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnCreateAccount, btnSignIn;
     FirebaseAuth mAuth;
     FirebaseFirestoreHelper firestoreHelper;
+    FirebaseFirestore db;
 
     @Override
     public void onStart() {
@@ -45,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         firestoreHelper = new FirebaseFirestoreHelper(this, FirebaseFirestore.getInstance());
+        db = FirebaseFirestore.getInstance();
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -58,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         btnCreateAccount.setOnClickListener(view -> {
-            String user = etUser.getText().toString();
+            String user = etUser.getText().toString().trim();
             String email = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString();
 
@@ -77,15 +80,26 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
+            // Registrar usuario directamente sin verificar si el nombre de usuario ya existe
             mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
+                    .addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             if (firebaseUser != null) {
                                 String userId = firebaseUser.getUid();
 
                                 // Guardar en Firestore
-                                firestoreHelper.addUser(userId, email, user, "", ""); // photoUrl y description vacíos
+                                firestoreHelper.addUser(userId, email, user, user.toLowerCase(), "", "");
+
+                                // Enviar email de verificación
+                                firebaseUser.sendEmailVerification()
+                                        .addOnCompleteListener(task2 -> {
+                                            if (task2.isSuccessful()) {
+                                                Toast.makeText(RegisterActivity.this, R.string.email_verification_sent, Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(RegisterActivity.this, R.string.email_verification_failed, Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
 
                                 Toast.makeText(RegisterActivity.this, R.string.account_created, Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -96,5 +110,6 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
         });
+
     }
 }

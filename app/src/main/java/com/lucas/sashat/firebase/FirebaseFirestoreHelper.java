@@ -26,11 +26,11 @@ public class FirebaseFirestoreHelper {
     // USUARIOS
     // --------------------
 
-    public void addUser(String userId, String email, String username, String photoUrl, String description) {
+    public void addUser(String userId, String email, String username, String photoUrl, String description, String s) {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("username", username);
-        user.put("photoUrl", photoUrl);
+        user.put("photoUrl", photoUrl); // La URL de la imagen
         user.put("description", description);
         user.put("followers", 0);
         user.put("following", 0);
@@ -42,6 +42,7 @@ public class FirebaseFirestoreHelper {
                 .addOnFailureListener(e -> System.err.println(context.getResources()
                         .getString(R.string.user_failed_to_add) + e.getMessage()));
     }
+
 
     public void getUser(String userId, OnSuccessListener<DocumentSnapshot> onSuccess, OnFailureListener onFailure) {
         db.collection("users").document(userId)

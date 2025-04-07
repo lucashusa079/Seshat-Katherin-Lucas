@@ -66,4 +66,26 @@
         <item>Young Adult</item>
         <item>Poetry</item>
     </string-array>
+    <string name="profile">profile\n</string>
+    <string name="books_read">books read</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="read">Read</string>
+    <string name="reading">Reading</string>
+    <string name="pending_read">Pending read</string>
+    <string name="username">username</string>
+    <string name="description">Description</string>
+    <string name="follow">Follow</string>
+    <string name="follow_">Follow</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="change_photo">Change photo</string>
+    <string name="settings">Settings</string>
+    <string name="night_mode">Night Mode</string>
+    <string name="notifications">Notifications</string>
+    <string name="language">Language</string>
+    <string name="log_out">Log Out</string>
+    <string name="choose_language">Choose language</string>
+    <string name="username_exists">username exists</string>
+    <string name="email_verification_sent">email verification sent</string>
+    <string name="email_verification_failed">email verification failed</string>
+    <string name="error_checking_username">error the user name is already in use</string>
 </resources>

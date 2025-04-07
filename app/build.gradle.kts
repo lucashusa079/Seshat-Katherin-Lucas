@@ -26,10 +26,12 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         viewBinding = true
         dataBinding = true
@@ -48,8 +50,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.code.gson:gson:2.10.1")
 
-
-
+    implementation(libs.firebase.storage)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -59,6 +60,12 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.annotation)
     implementation(libs.activity)
+    implementation (libs.com.squareup.retrofit2.retrofit2)
+    implementation (libs.retrofit2.converter.gson)
+    implementation (libs.okhttp)
+    implementation (libs.picasso)
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
     testImplementation(libs.junit)
