@@ -32,15 +32,19 @@
                     android:id="@+id/book_image"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/ic_book_placeholder"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="18dp"
                     android:contentDescription="Imagen del libro"
-                    android:layout_marginEnd="16dp"/>
+                    android:src="@drawable/ic_book_placeholder" />
 
                 <Button
                     android:id="@+id/select_image_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Subir Imagen"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:backgroundTint="@color/ambar"
                     android:layout_marginTop="8dp"/>
 
             </LinearLayout>
@@ -66,11 +70,11 @@
                     android:hint="Autor"
                     android:inputType="text"/>
 
-                <EditText
+                <TextView
                     android:id="@+id/genre_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Género"
+                    android:hint="Género: "
                     android:inputType="text"/>
 
                 <!-- Selección de lista -->
@@ -80,19 +84,28 @@
                     android:layout_height="wrap_content"/>
 
             </LinearLayout>
-
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <!-- Descripción -->
-    <EditText
-        android:id="@+id/description_edit_text"
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:hint="Descripción"
-        android:inputType="textMultiLine"
-        android:gravity="top|start"
-        android:layout_marginTop="16dp"/>
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="150dp">
+
+        <EditText
+            android:id="@+id/description_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Descripción"
+            android:inputType="textMultiLine"
+            android:gravity="top|start"
+            android:layout_marginTop="16dp"/>
+
+    </androidx.cardview.widget.CardView>
+
 
     <!-- Botón Agregar -->
     <Button
@@ -100,6 +113,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Agregar"
+        android:backgroundTint="@color/ambar"
         android:layout_marginTop="16dp"
         android:layout_gravity="center"/>
 

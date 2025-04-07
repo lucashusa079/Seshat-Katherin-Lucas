@@ -65,4 +65,27 @@
     <string name="email_verification_sent">email verification sent</string>
     <string name="email_verification_failed">email verification failed</string>
     <string name="error_checking_username">error the user name is already in use</string>
+    <string name="book_title">Title:</string>
+    <string name="book_author">Author:</string>
+    <string name="book_genre">Genre:</string>
+    <string-array name="genres">
+        <item>Fiction</item>
+        <item>Non-fiction</item>
+        <item>Mystery</item>
+        <item>Thriller</item>
+        <item>Romance</item>
+        <item>Science Fiction</item>
+        <item>Fantasy</item>
+        <item>Historical Fiction</item>
+        <item>Biography</item>
+        <item>Autobiography</item>
+        <item>Self-Help</item>
+        <item>History</item>
+        <item>Science</item>
+        <item>Travel</item>
+        <item>Cooking</item>
+        <item>Children</item>
+        <item>Young Adult</item>
+        <item>Poetry</item>
+    </string-array>
 </resources>

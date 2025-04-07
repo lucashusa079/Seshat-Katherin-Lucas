@@ -4,136 +4,148 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.lucas.sashat.R;
-import com.lucas.sashat.databinding.FragmentAddBinding;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 public class AddFragment extends Fragment {
-    private EditText titleEditText, authorEditText, genreEditText, descriptionEditText, imageUrlEditText;
+    private EditText titleEditText, authorEditText, descriptionEditText;
+    private Spinner genreSpinner;
+    private Button selectImageButton, addButton;
     private ImageView bookImage;
-    private Spinner listSelector;
-    private Button addButton, selectImageButton;
-    private static final int PICK_IMAGE_REQUEST = 1;
+    private FirebaseFirestore db;
+    private FirebaseAuth auth;
     private Uri imageUri;
-    private FirebaseAuth mAuth;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_add, container, false);
+    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    imageUri = result.getData().getData();
+                    Log.d("AddFragment", "Imagen seleccionada: " + imageUri);
+                    Glide.with(this)
+                            .load(imageUri)
+                            .placeholder(R.drawable.ic_book_placeholder)
+                            .error(R.drawable.ic_book_placeholder)
+                            .into(bookImage);
+                } else {
+                    Log.w("AddFragment", "No se seleccionó ninguna imagen");
+                }
+            });
 
-        titleEditText = rootView.findViewById(R.id.title_edit_text);
-        authorEditText = rootView.findViewById(R.id.author_edit_text);
-        genreEditText = rootView.findViewById(R.id.genre_edit_text);
-        descriptionEditText = rootView.findViewById(R.id.description_edit_text);
-        bookImage = rootView.findViewById(R.id.book_image);
-        addButton = rootView.findViewById(R.id.add_button);
-        selectImageButton = rootView.findViewById(R.id.select_image_button);
-        listSelector = rootView.findViewById(R.id.list_selector);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add, container, false);
 
-        // Inicializar el FirebaseAuth
-        mAuth = FirebaseAuth.getInstance();
+        titleEditText = view.findViewById(R.id.title_edit_text);
+        authorEditText = view.findViewById(R.id.author_edit_text);
+        descriptionEditText = view.findViewById(R.id.description_edit_text);
+        genreSpinner = view.findViewById(R.id.list_selector);
+        selectImageButton = view.findViewById(R.id.select_image_button);
+        addButton = view.findViewById(R.id.add_button);
+        bookImage = view.findViewById(R.id.book_image);
 
-        // Acción para el botón de "Subir Imagen"
-        selectImageButton.setOnClickListener(v -> openFileChooser());
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
-        // Acción para el botón "Agregar"
-        addButton.setOnClickListener(view -> {
-            String title = titleEditText.getText().toString();
-            String author = authorEditText.getText().toString();
-            String genre = genreEditText.getText().toString();
-            String imageUrl = imageUrlEditText.getText().toString();
-            String description = descriptionEditText.getText().toString();
-            String list = listSelector.getSelectedItem().toString();
+        // Configurar el Spinner con los géneros según el idioma del dispositivo
+        String[] genres = getResources().getStringArray(R.array.genres);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, genres);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genreSpinner.setAdapter(adapter);
 
-            // Subir el libro a Firestore
-            addBookToFirestore(title, author, genre, description, imageUrl, list);
+        // Log del idioma detectado
+        String language = Locale.getDefault().getLanguage();
+        Log.d("AddFragment", "Idioma del dispositivo: " + language);
+
+        selectImageButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            imagePickerLauncher.launch(intent);
         });
 
-        return rootView;
+        addButton.setOnClickListener(v -> addBookToFirestore());
+
+        return view;
     }
 
-    private void addBookToFirestore(String title, String author, String genre, String description, String imageUrl, String list) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private void addBookToFirestore() {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(getContext(), "Debes iniciar sesión para añadir un libro", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String title = titleEditText.getText().toString().trim();
+        String author = authorEditText.getText().toString().trim();
+        String description = descriptionEditText.getText().toString().trim();
+        String genre = genreSpinner.getSelectedItem().toString();
+
+        if (title.isEmpty() || author.isEmpty() || genre.isEmpty()) {
+            Toast.makeText(getContext(), "Por favor, completa los campos obligatorios", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (imageUri == null) {
+            Toast.makeText(getContext(), "Por favor, selecciona una imagen", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        saveBookToFirestore(title, author, description, genre, imageUri.toString(), currentUser.getUid());
+    }
+
+    private void saveBookToFirestore(String title, String author, String description, String genre, String imageUriString, String userId) {
         Map<String, Object> book = new HashMap<>();
         book.put("title", title);
         book.put("author", author);
         book.put("genre", genre);
         book.put("description", description);
-        book.put("coverImage", imageUrl.isEmpty() ? getImageUrl() : imageUrl);
-        book.put("list", list); // Se agrega a qué lista pertenece
-        book.put("userId", mAuth.getCurrentUser().getUid()); // Asociar el libro al usuario
+        book.put("imageUri", imageUriString);
+        book.put("addedBy", userId);
+        book.put("timestamp", com.google.firebase.Timestamp.now());
 
-        db.collection("Books")
+        db.collection("users")
+                .document(userId)
+                .collection("user_books")
                 .add(book)
-                .addOnSuccessListener(documentReference -> Log.d("AddFragment", "Libro agregado"))
-                .addOnFailureListener(e -> Log.e("AddFragment", "Error al agregar libro", e));
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("AddFragment", "Libro guardado con ID: " + documentReference.getId());
+                    Toast.makeText(getContext(), "Libro añadido con éxito", Toast.LENGTH_SHORT).show();
+                    clearFields();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("AddFragment", "Error al guardar libro: " + e.getMessage());
+                    Toast.makeText(getContext(), "Error al añadir el libro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
-    // Método para obtener la URL de la imagen
-    private String getImageUrl() {
-        if (imageUri != null) {
-            // Puedes subir la imagen a Firebase Storage y obtener la URL
-            return uploadImageToStorage();
-        }
-        // Si no hay imagen seleccionada, retorna la URL por defecto
-        return "https://example.com/default_image.jpg";  // Cambiar por una URL de imagen por defecto
-    }
-
-    // Método para subir la imagen seleccionada a Firebase Storage
-    private String uploadImageToStorage() {
-        // Aquí deberías subir la imagen a Firebase Storage y obtener la URL de descarga
-        // Ejemplo de código para subir la imagen y obtener la URL
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child("book_images/" + UUID.randomUUID().toString());
-        UploadTask uploadTask = storageRef.putFile(imageUri);
-        uploadTask.addOnSuccessListener(taskSnapshot -> {
-            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                String downloadUrl = uri.toString();
-                // Aquí se puede agregar la URL de la imagen al libro
-                Log.d("AddFragment", "Imagen subida con éxito. URL: " + downloadUrl);
-            });
-        }).addOnFailureListener(e -> Log.e("AddFragment", "Error al subir la imagen", e));
-
-        return "default_url";  // Retornar una URL temporal hasta que la imagen sea subida
-    }
-
-    // Método para abrir el selector de archivos y elegir una imagen
-    private void openFileChooser() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
-    // Método para manejar la imagen seleccionada
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            bookImage.setImageURI(imageUri); // Muestra la imagen seleccionada
-        }
+    private void clearFields() {
+        titleEditText.setText("");
+        authorEditText.setText("");
+        descriptionEditText.setText("");
+        genreSpinner.setSelection(0);
+        bookImage.setImageResource(R.drawable.ic_book_placeholder);
+        imageUri = null;
     }
 }
