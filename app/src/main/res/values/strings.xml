@@ -43,4 +43,27 @@
     <string name="cancelar">Cancelar</string>
     <string name="correo_enviado">Correo enviado. Revisa tu bandeja de entrada.</string>
     <string name="error_correo">Error al enviar el correo</string>
+    <string name="book_title">Title:</string>
+    <string name="book_author">Author:</string>
+    <string name="book_genre">Genre:</string>
+    <string-array name="genres">
+        <item>Fiction</item>
+        <item>Non-fiction</item>
+        <item>Mystery</item>
+        <item>Thriller</item>
+        <item>Romance</item>
+        <item>Science Fiction</item>
+        <item>Fantasy</item>
+        <item>Historical Fiction</item>
+        <item>Biography</item>
+        <item>Autobiography</item>
+        <item>Self-Help</item>
+        <item>History</item>
+        <item>Science</item>
+        <item>Travel</item>
+        <item>Cooking</item>
+        <item>Children</item>
+        <item>Young Adult</item>
+        <item>Poetry</item>
+    </string-array>
 </resources>
