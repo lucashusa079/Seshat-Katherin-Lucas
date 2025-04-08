@@ -6,9 +6,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
-
+   /*
 public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.BookGridViewHolder> {
-    private List<Book> bookList;
+ private List<Book> bookList;
 
     public BookGridAdapter(List<Book> bookList) {
         this.bookList = bookList;
@@ -42,3 +42,4 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.BookGr
         return bookList.size();
     }
 }
+*/
