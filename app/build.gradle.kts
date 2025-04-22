@@ -54,6 +54,7 @@ dependencies {
     implementation (libs.okhttp)
     implementation (libs.picasso)
     implementation (libs.glide)
+    implementation(libs.recyclerview)
     annotationProcessor (libs.compiler)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)

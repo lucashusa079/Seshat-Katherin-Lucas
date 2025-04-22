@@ -21,6 +21,7 @@ firebaseFirestore = "25.1.2"
 firebaseAuth = "23.2.0"
 okhttp = "4.9.1"
 picasso = "2.8"
+recyclerview = "1.4.0"
 
 [libraries]
 com-squareup-retrofit2-retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "comSquareupRetrofit2Retrofit" }
@@ -44,6 +45,7 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
