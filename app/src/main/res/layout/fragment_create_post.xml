@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="8dp">
+
+
+    <ImageButton
+        android:id="@+id/closeButton"
+        android:layout_width="15dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Cerrar"
+        android:scaleType="fitCenter"
+        android:src="@drawable/close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:text="Nueva publicación"
+        android:textColor="@color/text"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/closeButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/circle_background"
+        android:scaleType="centerCrop"
+        android:src="@drawable/boy"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/closeButton" />
+
+
+    <TextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:text="Usuario234"
+        android:textColor="@color/text"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/profileImageView"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+
+    <EditText
+        android:id="@+id/postEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="@string/qu_est_s_pensando"
+        android:minLines="4"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profileImageView"
+        app:layout_constraintTop_toBottomOf="@+id/genreSpinner" />
+
+    <ImageButton
+        android:id="@+id/cameraButton"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="50dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Abrir cámara"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_camera"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/postEditText"
+        app:layout_constraintTop_toBottomOf="@+id/postEditText" />
+
+    <ImageButton
+        android:id="@+id/galleryButton"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="10dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Seleccionar imagen de galería"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_galery"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/cameraButton"
+        app:layout_constraintTop_toBottomOf="@+id/postEditText" />
+    <!-- Spinner para género literario -->
+    <Spinner
+        android:id="@+id/genreSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/textPublicacion"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="@+id/postEditText"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
+
+    <!-- Botón para publicar -->
+    <Button
+        android:id="@+id/publishButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="60dp"
+        android:backgroundTint="@color/ambar"
+        android:text="@string/publicar"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        app:cornerRadius="90dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/book_genre"
+        android:textColor="@color/textBtn"
+        android:textSize="17sp"
+        app:layout_constraintStart_toEndOf="@+id/profileImageView"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
+
+    <ImageView
+        android:id="@+id/previewImageView"
+        android:layout_width="0dp"
+        android:layout_height="236dp"
+        android:layout_marginTop="50dp"
+        android:contentDescription="Vista previa de imagen"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/postEditText"
+        app:layout_constraintStart_toStartOf="@+id/postEditText"
+        app:layout_constraintTop_toBottomOf="@+id/postEditText"
+        tools:src="@drawable/round_back_white10_20" />
+
+    <ImageButton
+        android:id="@+id/deleteImageButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Eliminar imagen"
+        android:src="@android:drawable/btn_dialog"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/previewImageView"
+        app:layout_constraintTop_toTopOf="@+id/previewImageView" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

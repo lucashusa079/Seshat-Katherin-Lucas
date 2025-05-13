@@ -18,4 +18,6 @@
     <color name="text">#FF000000</color>
     <color name="textBtn">#D99E00</color>
     <color name="fondoSettings">#99B6B6B6</color>
+    <color name="colorPublicacionFondo">#f0f0f2</color>
+    <color name="textPublicacion">#4E4E4E</color>
 </resources>

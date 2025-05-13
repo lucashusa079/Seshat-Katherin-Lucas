@@ -90,6 +90,12 @@
         <item>Young Adult</item>
         <item>Poetry</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="share">Share</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="comment">Comment</string>
+    <string name="like">Like</string>
+    <string name="qu_est_s_pensando">¿Qué estás pensando?</string>
+    <string name="a_adir_libro">Añadir libro</string>
+    <string name="cerrar">Cerrar</string>
+    <string name="publicar">Publicar</string>
 </resources>

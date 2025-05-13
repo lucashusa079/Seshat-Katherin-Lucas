@@ -6,4 +6,7 @@
     <color name="background_card">#121212</color>
     <color name="text">#FFFFFF</color>
     <color name="textBtn">#D5AF4F</color>
-    <color name="fondoSettings">#992C2C2C</color></resources>
+    <color name="fondoSettings">#992C2C2C</color>
+    <color name="colorPublicacionFondo">#282828</color>
+    <color name="textPublicacion">#A9A8A8</color>
+</resources>

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -18,12 +19,15 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.lucas.sashat.R;
+import com.lucas.sashat.ui.home.CreatePostFragment;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -65,6 +69,7 @@ public class AddFragment extends Fragment {
         selectImageButton = view.findViewById(R.id.select_image_button);
         addButton = view.findViewById(R.id.add_button);
         bookImage = view.findViewById(R.id.book_image);
+        ImageButton closeButton = view.findViewById(R.id.closeButton);
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -86,7 +91,10 @@ public class AddFragment extends Fragment {
         });
 
         addButton.setOnClickListener(v -> addBookToFirestore());
-
+        closeButton.setOnClickListener(v -> {
+            NavController navController = NavHostFragment.findNavController(AddFragment.this);
+            navController.popBackStack();
+        });
         return view;
     }
 
