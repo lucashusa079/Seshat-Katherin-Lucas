@@ -226,7 +226,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         bundle.putString("genre", post.getGenre());
                         bundle.putString("imageUrl", post.getImageUrl());
 
-                        NavController navController = Navigation.findNavController(((Activity) context), R.id.nav_host_fragment_content_main);
+                        NavController navController = Navigation.findNavController(((Activity) context), R.id.nav_host_fragment_activity_main);
                         navController.navigate(R.id.createPostFragment, bundle);
                     } else if (which == 1) {
                         deletePost(post.getPostId());
