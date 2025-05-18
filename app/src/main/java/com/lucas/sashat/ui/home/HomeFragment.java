@@ -38,7 +38,6 @@ public class HomeFragment extends Fragment {
     private Set<String> selectedGenres = new HashSet<>();
 
     public HomeFragment() {
-        // Constructor vacío requerido
     }
 
     @Override
@@ -51,7 +50,7 @@ public class HomeFragment extends Fragment {
         postsRecyclerView = view.findViewById(R.id.postsRecyclerView);
         genreChipGroup = view.findViewById(R.id.genreChipGroup);
 
-        postAdapter = new PostAdapter(postList, getContext());
+        postAdapter = new PostAdapter(postList, getContext(), this);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         postsRecyclerView.setAdapter(postAdapter);
 
@@ -69,7 +68,6 @@ public class HomeFragment extends Fragment {
     private void setupGenreChips() {
         String[] genres = getResources().getStringArray(R.array.genres);
 
-        // Recuperar géneros guardados
         Set<String> savedGenres = getContext()
                 .getSharedPreferences("genre_prefs", Context.MODE_PRIVATE)
                 .getStringSet("selected_genres", new HashSet<>());
@@ -131,27 +129,46 @@ public class HomeFragment extends Fragment {
     }
 
     private void filterPostsByGenres(List<String> genres) {
-        if (genres.isEmpty()) {
-            loadAllPosts();
-            return;
+        postList.clear();
+        postAdapter.notifyDataSetChanged();
+
+        List<List<String>> genreChunks = new ArrayList<>();
+        for (int i = 0; i < genres.size(); i += 10) {
+            genreChunks.add(genres.subList(i, Math.min(i + 10, genres.size())));
         }
 
-        db.collection("posts")
-                .whereIn("genre", genres)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    postList.clear();
-                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        Post post = doc.toObject(Post.class);
-                        if (post != null) {
-                            post.setPostId(doc.getId());
-                            postList.add(post);
+        final int[] completedQueries = {0};
+
+        for (List<String> chunk : genreChunks) {
+            db.collection("posts")
+                    .whereIn("genre", chunk)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnSuccessListener(snapshot -> {
+                        for (DocumentSnapshot doc : snapshot) {
+                            Post post = doc.toObject(Post.class);
+                            if (post != null) {
+                                post.setPostId(doc.getId());
+                                if (!postList.contains(post)) {
+                                    postList.add(post);
+                                }
+                            }
                         }
-                    }
-                    postAdapter.notifyDataSetChanged();
-                });
+
+                        completedQueries[0]++;
+                        if (completedQueries[0] == genreChunks.size()) {
+                            postAdapter.notifyDataSetChanged();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        completedQueries[0]++;
+                        if (completedQueries[0] == genreChunks.size()) {
+                            postAdapter.notifyDataSetChanged();
+                        }
+                    });
+        }
     }
+
 
     private void showCommentDialog(Context context, String postId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

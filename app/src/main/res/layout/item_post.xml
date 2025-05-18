@@ -1,130 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="8dp"
-    card_view:cardCornerRadius="12dp"
-    card_view:cardElevation="4dp">
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="15dp"
+    app:cardBackgroundColor="@color/colorPublicacionFondo"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
 
-    <LinearLayout
+    <Button
+        android:id="@+id/optionsButton"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="320dp"
+        android:backgroundTint="@color/colorPublicacionFondo"
+        app:icon="@drawable/baseline_menu_24"
+        app:iconTint="@color/text" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPublicacionFondo"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="8dp">
 
-        <!-- Usuario y foto -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/linearLayout3"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:background="@color/colorPublicacionFondo"
+            android:orientation="vertical"
+            android:padding="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/userProfileImage"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="8dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/boy"
-                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/userProfileImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="8dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/boy" />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Usuario123"
+                    android:textColor="@color/text"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/postGenre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Usuario123"
+                android:layout_marginTop="-15dp"
+                android:paddingStart="60dp"
+                android:text="Género: Fantasía"
+                android:textColor="@color/textPublicacion"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/postContentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingStart="60dp"
+                android:text="Descripción del post sobre el libro..."
                 android:textColor="@color/text"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/postImage"
+                android:layout_width="match_parent"
+                android:layout_height="189dp"
+                android:layout_marginTop="8dp"
+                android:paddingLeft="60dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/round_back_white10_20"
+                android:visibility="visible"
+                app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
+
+                <ImageButton
+                    android:id="@+id/likeButton"
+                    android:layout_width="33dp"
+                    android:layout_height="30dp"
+                    android:background="@color/colorPublicacionFondo"
+                    android:contentDescription="@string/like"
+                    android:paddingEnd="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_heart" />
+
+                <ImageButton
+                    android:id="@+id/shareButton"
+                    android:layout_width="33dp"
+                    android:layout_height="30dp"
+                    android:background="@color/colorPublicacionFondo"
+                    android:contentDescription="@string/share"
+                    android:paddingEnd="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_share" />
+
+                <ImageButton
+                    android:id="@+id/bookComment"
+                    android:layout_width="33dp"
+                    android:layout_height="30dp"
+                    android:background="@color/colorPublicacionFondo"
+                    android:contentDescription="@string/comment"
+                    android:paddingEnd="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_comment" />
+
+                <ImageButton
+                    android:id="@+id/bookmarkButton"
+                    android:layout_width="33dp"
+                    android:layout_height="30dp"
+                    android:background="@color/colorPublicacionFondo"
+                    android:contentDescription="@string/bookmark"
+                    android:paddingEnd="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_bookmark" />
+            </LinearLayout>
         </LinearLayout>
-        <!-- genero literario -->
-        <TextView
-            android:id="@+id/postGenre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-15dp"
-            android:paddingStart="60dp"
-            android:text="Género: Fantasía"
-            android:textColor="@color/textPublicacion"
-            android:textSize="12sp"
-            android:textStyle="italic" />
-        <!-- Texto del post -->
-        <TextView
-            android:id="@+id/postContentText"
-            android:layout_width="344dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:paddingStart="60dp"
-            android:text="Descripción del post sobre el libro..."
-            android:textColor="@color/text"
-            android:textSize="16sp" />
-
-        <!-- Imagen del libro -->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/postImage"
-            app:shapeAppearanceOverlay="@style/RoundedCornerImage"
-            android:layout_width="325dp"
-            android:layout_height="189dp"
-            android:layout_marginTop="8dp"
-            android:paddingLeft="60dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/round_back_white10_20"
-            android:visibility="visible" />
-        <!-- Botones de interacción -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="start"
-            android:orientation="horizontal"
-            android:paddingTop="10dp">
-
-            <ImageButton
-                android:id="@+id/likeButton"
-                android:layout_width="33dp"
-                android:layout_height="30dp"
-                android:background="@color/colorPublicacionFondo"
-                android:contentDescription="@string/like"
-                android:paddingRight="8dp"
-                android:paddingBottom="2dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_heart" />
-
-            <ImageButton
-                android:id="@+id/shareButton"
-                android:layout_width="33dp"
-                android:layout_height="30dp"
-                android:background="@color/colorPublicacionFondo"
-                android:contentDescription="@string/share"
-                android:paddingRight="8dp"
-                android:paddingBottom="3dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_share" />
-
-            <ImageButton
-                android:id="@+id/bookComment"
-                android:layout_width="33dp"
-                android:layout_height="30dp"
-                android:background="@color/colorPublicacionFondo"
-                android:contentDescription="@string/comment"
-                android:paddingRight="8dp"
-                android:paddingBottom="2dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_comment" />
-
-            <ImageButton
-                android:id="@+id/bookmarkButton"
-                android:layout_width="33dp"
-                android:layout_height="30dp"
-                android:background="@color/colorPublicacionFondo"
-                android:contentDescription="@string/bookmark"
-                android:paddingRight="8dp"
-                android:paddingBottom="2dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_bookmark" />
-        </LinearLayout>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

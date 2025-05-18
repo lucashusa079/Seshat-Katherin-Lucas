@@ -138,6 +138,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <Button
+        android:id="@+id/deletePostButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="60dp"
+        android:backgroundTint="@color/text"
+        android:text="Eliminar"
+        android:textAllCaps="false"
+        android:textColor="@color/background"
+        android:visibility="gone"
+        app:cornerRadius="90dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/publishButton" />
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"

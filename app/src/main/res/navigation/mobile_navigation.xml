@@ -45,7 +45,14 @@
         android:id="@+id/navigation_home"
         android:name="com.lucas.sashat.ui.home.HomeFragment"
         android:label="navigation_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_nav_home_to_createPostFragment"
+            app:destination="@id/createPostFragment" />
+    </fragment>
+
+
     <fragment
         android:id="@+id/createPostFragment"
         android:name="com.lucas.sashat.ui.home.CreatePostFragment"

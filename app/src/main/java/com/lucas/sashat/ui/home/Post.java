@@ -14,8 +14,8 @@ public class Post {
     private String postId;
     private Date timestamp;
 
+
     public Post() {
-        // Constructor vacío requerido para Firestore
     }
     public Date getTimestamp() {
         return timestamp;
@@ -76,5 +76,18 @@ public class Post {
     public void setUsername(String username) {
         this.username = username;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Post post = (Post) obj;
+        return postId != null && postId.equals(post.postId);
+    }
+
+    @Override
+    public int hashCode() {
+        return postId != null ? postId.hashCode() : 0;
+    }
+
 
 }

@@ -37,7 +37,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FieldValue;
 import com.lucas.sashat.R;
 
 import java.io.File;
@@ -64,9 +63,11 @@ public class CreatePostFragment extends Fragment {
     private TextView usernameTextView;
     private Spinner genreSpinner;
     private Button publishButton;
-
+    private String postId = null;
     private Uri selectedImageUri;
     private FirebaseFirestore db;
+    private Button deletePostButton;
+    private String currentImageUrl;
 
     public CreatePostFragment() {}
 
@@ -86,9 +87,52 @@ public class CreatePostFragment extends Fragment {
         publishButton = view.findViewById(R.id.publishButton);
         previewImageView = view.findViewById(R.id.previewImageView);
         deleteImageButton = view.findViewById(R.id.deleteImageButton);
-
+        deletePostButton = view.findViewById(R.id.deletePostButton);
+        deletePostButton.setVisibility(View.GONE);
         previewImageView.setVisibility(View.GONE);
         deleteImageButton.setVisibility(View.GONE);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.genres, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genreSpinner.setAdapter(adapter);
+
+        if (getArguments() != null) {
+            postId = getArguments().getString("postId");
+            String text = getArguments().getString("text");
+            String genre = getArguments().getString("genre");
+            String imageUrl = getArguments().getString("imageUrl");
+
+            if (imageUrl != null) {
+                previewImageView.setVisibility(View.VISIBLE);
+                deleteImageButton.setVisibility(View.VISIBLE);
+                Glide.with(this).load(imageUrl).into(previewImageView);
+                currentImageUrl = imageUrl;
+            }
+            if (postId != null) {
+                db.collection("posts").document(postId).get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot.exists()) {
+                                String userId = documentSnapshot.getString("userId");
+                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                if (currentUser != null && currentUser.getUid().equals(userId)) {
+                                    deletePostButton.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        });
+            }
+            if (text != null) {
+                postEditText.setText(text);
+            }
+            if (genre != null) {
+                int position = adapter.getPosition(genre);
+                genreSpinner.setSelection(position);
+            }
+
+            if (postId != null) {
+                loadPostData(postId);
+            }
+        }
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -109,11 +153,6 @@ public class CreatePostFragment extends Fragment {
             Glide.with(this).load(Uri.parse(profileImagePath)).into(profileImageView);
         }
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.genres, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        genreSpinner.setAdapter(adapter);
-
         cameraButton.setOnClickListener(v -> openCamera());
         galleryButton.setOnClickListener(v -> openGallery());
 
@@ -122,7 +161,14 @@ public class CreatePostFragment extends Fragment {
             previewImageView.setImageDrawable(null);
             previewImageView.setVisibility(View.GONE);
             deleteImageButton.setVisibility(View.GONE);
-            Toast.makeText(getContext(), "Imagen eliminada", Toast.LENGTH_SHORT).show();
+
+            if (postId != null) {
+                db.collection("posts").document(postId)
+                        .update("imageUrl", null)
+                        .addOnSuccessListener(unused -> Log.d("CreatePost", "Imagen eliminada del post"))
+                        .addOnFailureListener(e -> Log.e("CreatePost", "Error al eliminar imagen", e));
+            }
+
         });
 
         closeButton.setOnClickListener(v -> {
@@ -146,14 +192,15 @@ public class CreatePostFragment extends Fragment {
 
             if (currentUser != null) {
                 String userId = currentUser.getUid();
-                String postId = UUID.randomUUID().toString();
+                if (postId == null) {
+                    postId = UUID.randomUUID().toString(); // Solo generamos uno nuevo si es creación
+                }
 
                 Map<String, Object> post = new HashMap<>();
                 post.put("userId", userId);
                 post.put("text", postText);
                 post.put("genre", selectedGenre);
                 post.put("timestamp", Timestamp.now());
-
 
                 if (selectedImageUri != null) {
                     File file = new File(getPath(requireContext(), selectedImageUri));
@@ -163,14 +210,92 @@ public class CreatePostFragment extends Fragment {
                 }
             }
         });
+        deletePostButton.setOnClickListener(v -> {
+            new android.app.AlertDialog.Builder(getContext())
+                    .setTitle("¿Eliminar publicación?")
+                    .setMessage("¿Estás seguro de que deseas eliminar esta publicación? Esta acción no se puede deshacer.")
+                    .setPositiveButton("Eliminar", (dialog, which) -> {
+                        if (postId != null) {
+                            db.collection("posts").document(postId)
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> {
+                                        if (currentImageUrl != null) {
+                                            deleteImageFromImgur(currentImageUrl);
+                                        }
+                                        Toast.makeText(getContext(), "Post eliminado", Toast.LENGTH_SHORT).show();
+                                        NavHostFragment.findNavController(CreatePostFragment.this).popBackStack();
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(getContext(), "Error al eliminar", Toast.LENGTH_SHORT).show()
+                                    );
+                        }
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+        });
+
 
         return view;
     }
+    private void deleteImageFromImgur(String imageUrl) {
+        String deleteHash = extractDeleteHash(imageUrl);
+        if (deleteHash == null) return;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.imgur.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ImgurApi imgurApi = retrofit.create(ImgurApi.class);
+
+        Call<Void> call = imgurApi.deleteImage("Client-ID e0b28a1739f9afc", deleteHash);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    Log.e("Imgur", "Error al borrar imagen: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("Imgur", "Fallo al conectar con Imgur: " + t.getMessage());
+            }
+        });
+    }
+
+    // Extrae el ID de la imagen desde la URL (https://i.imgur.com/abc123.jpg => abc123)
+    private String extractDeleteHash(String imageUrl) {
+        try {
+            Uri uri = Uri.parse(imageUrl);
+            String filename = uri.getLastPathSegment(); // abc123.jpg
+            if (filename != null && filename.contains(".")) {
+                return filename.substring(0, filename.indexOf(".")); // abc123
+            }
+        } catch (Exception e) {
+            Log.e("Imgur", "Error extrayendo ID de imagen", e);
+        }
+        return null;
+    }
+
+    private void loadPostData(String postId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(postId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String text = documentSnapshot.getString("text");
+                        String genre = documentSnapshot.getString("genre");
+                        postEditText.setText(text);
+                        int position = ((ArrayAdapter) genreSpinner.getAdapter()).getPosition(genre);
+                        genreSpinner.setSelection(position);
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al cargar la publicación", Toast.LENGTH_SHORT).show());
+    }
 
     private void uploadImageToImgur(File imageFile, String postId, Map<String, Object> post) {
-        // 🔒 Verifica el tamaño de la imagen antes de intentar subirla
         long fileSize = imageFile.length();
-        if (fileSize > 10 * 1024 * 1024) {  // 10 MB
+        if (fileSize > 10 * 1024 * 1024) {
             Toast.makeText(getContext(), "La imagen es demasiado grande (máx. 10 MB)", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -190,7 +315,6 @@ public class CreatePostFragment extends Fragment {
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", imageFile.getName(), requestBody);
 
-        //  Asegúrate de usar el formato correcto para la cabecera de autorización
         Call<ImgurResponse> call = imgurApi.uploadImage("Client-ID e0b28a1739f9afc", body);
 
         call.enqueue(new Callback<ImgurResponse>() {
@@ -215,13 +339,11 @@ public class CreatePostFragment extends Fragment {
     private void savePostToFirestore(String postId, Map<String, Object> post) {
         db.collection("posts").document(postId).set(post)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "Publicado con éxito", Toast.LENGTH_SHORT).show();
                     NavController navController = NavHostFragment.findNavController(CreatePostFragment.this);
                     navController.popBackStack();
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al publicar", Toast.LENGTH_SHORT).show());
     }
-
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -236,15 +358,14 @@ public class CreatePostFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101 && resultCode == Activity.RESULT_OK && data != null) {
-            selectedImageUri = data.getData();  // Obtiene la URI de la imagen seleccionada
+            selectedImageUri = data.getData();
             if (selectedImageUri != null) {
-                previewImageView.setImageURI(selectedImageUri);  // Muestra la imagen en el ImageView
-                previewImageView.setVisibility(View.VISIBLE);  // Muestra la vista previa
-                deleteImageButton.setVisibility(View.VISIBLE);  // Muestra el botón para eliminar la imagen
+                previewImageView.setImageURI(selectedImageUri);
+                previewImageView.setVisibility(View.VISIBLE);
+                deleteImageButton.setVisibility(View.VISIBLE);
             }
         }
     }
-
 
     public static String getPath(Context context, Uri uri) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -259,7 +380,7 @@ public class CreatePostFragment extends Fragment {
         try (Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-                return cursor.getString(columnIndex);  // Devuelve el nombre del archivo
+                return cursor.getString(columnIndex);
             }
         }
         return null;
@@ -270,7 +391,7 @@ public class CreatePostFragment extends Fragment {
         try (Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                return cursor.getString(columnIndex);  // Devuelve la ruta completa en versiones antiguas
+                return cursor.getString(columnIndex);
             }
         }
         return null;
@@ -283,5 +404,4 @@ public class CreatePostFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
     }
-
 }
