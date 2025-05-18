@@ -16,7 +16,8 @@
         android:id="@+id/optionsButton"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="320dp"
+        android:layout_marginLeft="280dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/colorPublicacionFondo"
         app:icon="@drawable/baseline_menu_24"
         app:iconTint="@color/text" />
@@ -77,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:paddingStart="60dp"
+                android:paddingStart="0dp"
                 android:text="Descripción del post sobre el libro..."
                 android:textColor="@color/text"
                 android:textSize="16sp" />
@@ -87,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="189dp"
                 android:layout_marginTop="8dp"
-                android:paddingLeft="60dp"
+                android:paddingLeft="0dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/round_back_white10_20"
                 android:visibility="visible"

@@ -23,7 +23,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +32,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +42,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.lucas.sashat.R;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -136,7 +140,7 @@ public class CreatePostFragment extends Fragment {
             }
         }
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
             String uid = currentUser.getUid();
             db.collection("users").document(uid).get()
@@ -170,7 +174,6 @@ public class CreatePostFragment extends Fragment {
                         .addOnSuccessListener(unused -> Log.d("CreatePost", "Imagen eliminada del post"))
                         .addOnFailureListener(e -> Log.e("CreatePost", "Error al eliminar imagen", e));
             }
-
         });
 
         closeButton.setOnClickListener(v -> {
@@ -204,14 +207,30 @@ public class CreatePostFragment extends Fragment {
                 post.put("genre", selectedGenre);
                 post.put("timestamp", Timestamp.now());
 
+                publishButton.setEnabled(false);
+                publishButton.setText("Publicando...");
+
                 if (selectedImageUri != null) {
-                    File file = new File(getPath(requireContext(), selectedImageUri));
-                    uploadImageToImgur(file, postId, post);
+                    new Thread(() -> {
+                        try {
+                            File file = getFileFromUri(requireContext(), selectedImageUri);
+                            requireActivity().runOnUiThread(() -> uploadImageToImgur(file, postId, post));
+                        } catch (IOException e) {
+                            requireActivity().runOnUiThread(() -> {
+                                Toast.makeText(getContext(), "Error al procesar la imagen", Toast.LENGTH_SHORT).show();
+                                publishButton.setEnabled(true);
+                                publishButton.setText("Publicar");
+                            });
+                        }
+                    }).start();
                 } else {
                     savePostToFirestore(postId, post);
+                    publishButton.setEnabled(true);
+                    publishButton.setText("Publicar");
                 }
             }
         });
+
         deletePostButton.setOnClickListener(v -> {
             new android.app.AlertDialog.Builder(getContext())
                     .setTitle("¿Eliminar publicación?")
@@ -236,202 +255,160 @@ public class CreatePostFragment extends Fragment {
                     .show();
         });
 
-        loadUserProfilePhoto();
-
+        loadUserProfileImage();
         return view;
     }
 
-
-    private void deleteImageFromImgur(String imageUrl) {
-        String deleteHash = extractDeleteHash(imageUrl);
-        if (deleteHash == null) return;
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.imgur.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ImgurApi imgurApi = retrofit.create(ImgurApi.class);
-
-        Call<Void> call = imgurApi.deleteImage("Client-ID e0b28a1739f9afc", deleteHash);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (!response.isSuccessful()) {
-                    Log.e("Imgur", "Error al borrar imagen: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("Imgur", "Fallo al conectar con Imgur: " + t.getMessage());
-            }
-        });
-    }
-
-    private void loadUserProfilePhoto() {
-        String currentUserId = auth.getCurrentUser().getUid();
-
-        db.collection("users")
-                .document(currentUserId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String photoUrl = documentSnapshot.getString("photoUrl");
-                        if (photoUrl != null && !photoUrl.isEmpty()) {
-                            Glide.with(this)
-                                    .load(photoUrl)
-                                    .transform(new CircleCrop())
-                                    .into(profileImageView);
-                        } else {
-                            profileImageView.setImageResource(R.drawable.boy); // Imagen por defecto
+    private void loadUserProfileImage() {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            db.collection("users").document(uid).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String imagePath = documentSnapshot.getString("profileImagePath");
+                            if (imagePath != null) {
+                                Glide.with(this).load(Uri.parse(imagePath)).into(profileImageView);
+                            }
                         }
-                    } else {
-                        profileImageView.setImageResource(R.drawable.boy);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    profileImageView.setImageResource(R.drawable.boy);
-                });
-    }
-    // Extrae el ID de la imagen desde la URL (https://i.imgur.com/abc123.jpg => abc123)
-    private String extractDeleteHash(String imageUrl) {
-        try {
-            Uri uri = Uri.parse(imageUrl);
-            String filename = uri.getLastPathSegment(); // abc123.jpg
-            if (filename != null && filename.contains(".")) {
-                return filename.substring(0, filename.indexOf(".")); // abc123
-            }
-        } catch (Exception e) {
-            Log.e("Imgur", "Error extrayendo ID de imagen", e);
+                    });
         }
-        return null;
     }
 
     private void loadPostData(String postId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("posts").document(postId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String text = documentSnapshot.getString("text");
                         String genre = documentSnapshot.getString("genre");
-                        postEditText.setText(text);
-                        int position = ((ArrayAdapter) genreSpinner.getAdapter()).getPosition(genre);
-                        genreSpinner.setSelection(position);
+                        String imageUrl = documentSnapshot.getString("imageUrl");
+
+                        if (text != null) {
+                            postEditText.setText(text);
+                        }
+                        if (genre != null) {
+                            ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) genreSpinner.getAdapter();
+                            int position = adapter.getPosition(genre);
+                            genreSpinner.setSelection(position);
+                        }
+                        if (imageUrl != null) {
+                            previewImageView.setVisibility(View.VISIBLE);
+                            deleteImageButton.setVisibility(View.VISIBLE);
+                            Glide.with(this).load(imageUrl).into(previewImageView);
+                            currentImageUrl = imageUrl;
+                        }
                     }
-                })
-                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al cargar la publicación", Toast.LENGTH_SHORT).show());
+                });
+    }
+
+    private File getFileFromUri(Context context, Uri uri) throws IOException {
+        File tempFile = File.createTempFile("upload", ".jpg", context.getCacheDir());
+        try (InputStream inputStream = context.getContentResolver().openInputStream(uri);
+             FileOutputStream outputStream = new FileOutputStream(tempFile)) {
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = inputStream.read(buf)) > 0) {
+                outputStream.write(buf, 0, len);
+            }
+        }
+        return tempFile;
     }
 
     private void uploadImageToImgur(File imageFile, String postId, Map<String, Object> post) {
-        long fileSize = imageFile.length();
-        if (fileSize > 10 * 1024 * 1024) {
-            Toast.makeText(getContext(), "La imagen es demasiado grande (máx. 10 MB)", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.imgur.com/")
-                .client(new OkHttpClient.Builder()
-                        .connectTimeout(60, TimeUnit.SECONDS)
-                        .writeTimeout(60, TimeUnit.SECONDS)
-                        .readTimeout(60, TimeUnit.SECONDS)
-                        .build())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
 
-        ImgurApi imgurApi = retrofit.create(ImgurApi.class);
+        ImgurApi apiService = retrofit.create(ImgurApi.class);
 
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", imageFile.getName(), requestBody);
+        RequestBody requestFile = RequestBody.create(imageFile, MediaType.parse("image/*"));
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
 
-        Call<ImgurResponse> call = imgurApi.uploadImage("Client-ID e0b28a1739f9afc", body);
+        // Cambia "Client-ID TU_CLIENT_ID" por tu Client-ID real
+        Call<ImgurResponse> call = apiService.uploadImage("Client-ID eadd0498ebb4045", body);
 
         call.enqueue(new Callback<ImgurResponse>() {
             @Override
             public void onResponse(Call<ImgurResponse> call, Response<ImgurResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    String imageUrl = response.body().data.link;
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    String imageUrl = response.body().getData().getLink();
+                    Log.d("ImgurUpload", "Imagen subida con éxito: " + imageUrl);
                     post.put("imageUrl", imageUrl);
                     savePostToFirestore(postId, post);
                 } else {
-                    Toast.makeText(getContext(), "Error al subir imagen a Imgur", Toast.LENGTH_SHORT).show();
+                    String errorBodyStr = "No body";
+                    try {
+                        if (response.errorBody() != null) {
+                            errorBodyStr = response.errorBody().string();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e("ImgurUpload", "Error al subir imagen. Código: " + response.code() + "\nError body:\n" + errorBodyStr);
+                    Toast.makeText(getContext(), "Error al subir imagen: " + response.code(), Toast.LENGTH_LONG).show();
+
+                    publishButton.setEnabled(true);
+                    publishButton.setText("Publicar");
                 }
             }
 
             @Override
             public void onFailure(Call<ImgurResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Falló la subida: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("ImgurUpload", "Fallo en la subida", t);
+                Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+
+                publishButton.setEnabled(true);
+                publishButton.setText("Publicar");
             }
         });
     }
 
     private void savePostToFirestore(String postId, Map<String, Object> post) {
         db.collection("posts").document(postId).set(post)
-                .addOnSuccessListener(aVoid -> {
-                    NavController navController = NavHostFragment.findNavController(CreatePostFragment.this);
-                    navController.popBackStack();
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(getContext(), "Publicación exitosa", Toast.LENGTH_SHORT).show();
+                    publishButton.setEnabled(true);
+                    publishButton.setText("Publicar");
+                    NavHostFragment.findNavController(CreatePostFragment.this).popBackStack();
                 })
-                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al publicar", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Error al guardar publicación", Toast.LENGTH_SHORT).show();
+                    publishButton.setEnabled(true);
+                    publishButton.setText("Publicar");
+                });
+    }
+
+    private void deleteImageFromImgur(String imageUrl) {
+        // Aquí implementa tu lógica para eliminar la imagen en Imgur, si la tienes
     }
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, 101);
+        startActivityForResult(intent, 100);
     }
 
     private void openCamera() {
-        Toast.makeText(getContext(), "Abrir cámara (a implementar)", Toast.LENGTH_SHORT).show();
+        // Aquí implementa abrir cámara si quieres
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 101 && resultCode == Activity.RESULT_OK && data != null) {
-            selectedImageUri = data.getData();
-            if (selectedImageUri != null) {
-                previewImageView.setImageURI(selectedImageUri);
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            if (requestCode == 100) {
+                selectedImageUri = data.getData();
                 previewImageView.setVisibility(View.VISIBLE);
                 deleteImageButton.setVisibility(View.VISIBLE);
+                Glide.with(this).load(selectedImageUri).into(previewImageView);
             }
-        }
-    }
-
-    public static String getPath(Context context, Uri uri) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return getPathForApi29AndAbove(context, uri);
-        } else {
-            return getPathForLegacy(context, uri);
-        }
-    }
-
-    private static String getPathForApi29AndAbove(Context context, Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DISPLAY_NAME};
-        try (Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null)) {
-            if (cursor != null && cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-                return cursor.getString(columnIndex);
-            }
-        }
-        return null;
-    }
-
-    private static String getPathForLegacy(Context context, Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        try (Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null)) {
-            if (cursor != null && cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                return cursor.getString(columnIndex);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
     }
 }

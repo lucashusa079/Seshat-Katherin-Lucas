@@ -14,9 +14,10 @@ public interface ImgurApi {
     @Multipart
     @POST("3/image")
     Call<ImgurResponse> uploadImage(
-            @Header("Authorization") String auth,
+            @Header("Authorization") String authHeader,
             @Part MultipartBody.Part image
     );
+
     @DELETE("3/image/{deleteHash}")
     Call<Void> deleteImage(
             @Header("Authorization") String auth,
