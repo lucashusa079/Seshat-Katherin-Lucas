@@ -45,7 +45,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="15"
             android:textColor="@color/text"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/tvFollowers"
@@ -66,7 +65,6 @@
             android:layout_width="27dp"
             android:layout_height="21dp"
             android:layout_marginTop="20dp"
-            android:text="20"
             android:textColor="@color/text"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/tvFollowed"
@@ -95,17 +93,16 @@
             android:textSize="15sp"
             app:cornerRadius="50dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDescripción"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescripcion"
             app:strokeColor="@color/ambar"
             app:strokeWidth="1.5dp" />
 
         <TextView
-            android:id="@+id/tvDescripción"
+            android:id="@+id/tvDescripcion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:text="Descripción del perfil"
             android:textColor="@color/text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivProfileImage" />
@@ -164,7 +161,7 @@
             android:textSize="15sp"
             app:cornerRadius="50dp"
             app:layout_constraintStart_toEndOf="@+id/btnEditar"
-            app:layout_constraintTop_toBottomOf="@+id/tvDescripción"/>
+            app:layout_constraintTop_toBottomOf="@+id/tvDescripcion"/>
 
         <ImageView
             android:id="@+id/btnMenu"

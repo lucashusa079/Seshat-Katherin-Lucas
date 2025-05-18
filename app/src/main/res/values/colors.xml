@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <!-- <color name="ambar">#F4C95D</color> -->
-    <color name="book_placeholder_color">#99898989</color>
+    <color name="book_placeholder_color">#FFFFFF</color>
     <color name="negro_carbon">#121212</color>
     <color name="ambar">#D5AF4F</color>
     <color name="fondo">#525252</color>
@@ -18,4 +18,5 @@
     <color name="text">#FF000000</color>
     <color name="textBtn">#D99E00</color>
     <color name="fondoSettings">#99B6B6B6</color>
+    <color name="colorBotones">#D5AF4F</color>
 </resources>

@@ -73,21 +73,10 @@
                     android:layout_width="65dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="8dp"
-                    android:backgroundTint="@color/ambar"
+                    android:backgroundTint="@color/colorBotones"
                     android:minHeight="0dp"
                     android:padding="4dp"
                     android:text="Leído"
-                    android:textSize="10sp" />
-
-                <Button
-                    android:id="@+id/btn_to_read"
-                    android:layout_width="65dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="8dp"
-                    android:backgroundTint="@color/ambar"
-                    android:minHeight="0dp"
-                    android:padding="4dp"
-                    android:text="Por Leer"
                     android:textSize="10sp" />
 
                 <Button
@@ -95,11 +84,24 @@
                     android:layout_width="65dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="8dp"
-                    android:backgroundTint="@color/ambar"
+                    android:backgroundTint="@color/colorBotones"
                     android:minHeight="0dp"
                     android:padding="4dp"
                     android:text="Leyendo"
                     android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/btn_to_read"
+                    android:layout_width="65dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="@color/colorBotones"
+                    android:minHeight="0dp"
+                    android:padding="4dp"
+                    android:text="Por Leer"
+                    android:textSize="10sp" />
+
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

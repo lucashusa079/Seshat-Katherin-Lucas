@@ -1,49 +1,63 @@
-/*
-
 package com.lucas.sashat;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
+import java.util.ArrayList;
 import java.util.List;
 
-public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.BookGridViewHolder> {
-    private List<Book> bookList;
+public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.BookViewHolder> {
+    private static final String TAG = "BookGridAdapter";
+    private List<Book> books;
+    private Context context;
 
-    public BookGridAdapter(List<Book> bookList) {
-        this.bookList = bookList;
+    public BookGridAdapter(Context context, List<Book> books) {
+        this.context = context;
+        this.books = books;
     }
 
-    public static class BookGridViewHolder extends RecyclerView.ViewHolder {
-        public ImageView bookImage;
-
-        public BookGridViewHolder(View itemView) {
-            super(itemView);
-            bookImage = itemView.findViewById(R.id.book_image); // Asumiendo que el layout contiene un ImageView con este ID
-        }
-    }
-
+    @NonNull
     @Override
-    public BookGridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Inflar un layout solo con la portada (si es necesario otro archivo XML o el mismo que el de BookAdapter)
+    public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_book_search, parent, false); // Puedes usar el mismo layout de BookAdapter
-        return new BookGridViewHolder(view);
+                .inflate(R.layout.item_book_grid, parent, false);
+        return new BookViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(BookGridViewHolder holder, int position) {
-        Book book = bookList.get(position);
-        holder.bookImage.setImageResource(book.getImageResId()); // Solo cargar la portada del libro
+    public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
+        Book book = books.get(position);
+        Log.d(TAG, "Cargando imagen para: " + book.getTitle() + ", URL: " + book.getImageUrl());
+        Glide.with(context)
+                .load(book.getImageUrl()) // Cambiado de getCoverImage a getImageUrl
+                .placeholder(R.drawable.ic_book_placeholder)
+                .error(R.drawable.ic_book_placeholder)
+                .into(holder.bookCover);
     }
 
     @Override
     public int getItemCount() {
-        return bookList.size();
+        return books.size();
     }
 
-}
+    public void updateBooks(List<Book> newBooks) {
+        this.books.clear();
+        this.books.addAll(newBooks);
+        notifyDataSetChanged();
+    }
 
-*/
+    static class BookViewHolder extends RecyclerView.ViewHolder {
+        ImageView bookCover;
+
+        BookViewHolder(View itemView) {
+            super(itemView);
+            bookCover = itemView.findViewById(R.id.book_cover);
+        }
+    }
+}

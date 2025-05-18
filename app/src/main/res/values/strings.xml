@@ -66,17 +66,17 @@
         <item>Young Adult</item>
         <item>Poetry</item>
     </string-array>
-    <string name="profile">profile\n</string>
-    <string name="books_read">books read</string>
-    <string name="edit_profile">Edit profile</string>
-    <string name="read">Read</string>
-    <string name="reading">Reading</string>
-    <string name="pending_read">Pending read</string>
-    <string name="username">username</string>
+<!--    <string name="profile">profile\n</string>-->
+<!--    <string name="books_read">books read</string>-->
+<!--    <string name="edit_profile">Edit profile</string>-->
+<!--    <string name="read">Read</string>-->
+<!--    <string name="reading">Reading</string>-->
+<!--    <string name="pending_read">Pending read</string>-->
+<!--    <string name="username">username</string>-->
     <string name="description">Description</string>
-    <string name="follow">Follow</string>
-    <string name="follow_">Follow</string>
-    <string name="unfollow">Unfollow</string>
+<!--    <string name="follow">Follow</string>-->
+<!--    <string name="follow_">Follow</string>-->
+<!--    <string name="unfollow">Unfollow</string>-->
     <string name="change_photo">Change photo</string>
     <string name="settings">Settings</string>
     <string name="night_mode">Night Mode</string>
@@ -88,4 +88,43 @@
     <string name="email_verification_sent">email verification sent</string>
     <string name="email_verification_failed">email verification failed</string>
     <string name="error_checking_username">error the user name is already in use</string>
+
+    <string name="profile">Imagen de perfil</string>
+    <string name="username">Username</string>
+    <string name="user_description">Descripción del perfil</string>
+    <string name="followers_count">15</string>
+    <string name="followers_label">seguidores</string>
+    <string name="following_count">5</string>
+    <string name="following_label">seguidos</string>
+    <string name="edit_profile">Editar perfil</string>
+    <string name="follow">Seguir</string>
+    <string name="unfollow">Dejar de seguir</string>
+    <string name="menu">Menú</string>
+    <string name="read">Leídos</string>
+    <string name="reading">Leyendo</string>
+    <string name="pending_read">Por Leer</string>
+    <string name="book_cover">Portada del libro</string>
+    <string name="empty_list">No hay libros en esta lista</string>
+
+
+    <!-- Opciones para el Spinner de listas -->
+    <string-array name="book_lists">
+        <item>Leídos</item>
+        <item>Leyendo</item>
+        <item>Por Leer</item>
+    </string-array>
+
+    <!-- Vista libros -->
+    <string name="book_title_placeholder">Título del libro</string>
+    <string name="book_author_placeholder">Autor del libro</string>
+    <string name="book_genre_placeholder">Género del libro</string>
+    <string name="start_date_label">Fecha de inicio:</string>
+    <string name="start_date_hint">yyyy-MM-dd</string>
+    <string name="end_date_label">Fecha de fin:</string>
+    <string name="end_date_hint">yyyy-MM-dd</string>
+    <string name="notes_label">Notas:</string>
+    <string name="notes_hint">Escribe tus notas aquí...</string>
+    <string name="favorite_characters_label">Personajes favoritos:</string>
+    <string name="favorite_characters_hint">Lista tus personajes favoritos...</string>
+
 </resources>
