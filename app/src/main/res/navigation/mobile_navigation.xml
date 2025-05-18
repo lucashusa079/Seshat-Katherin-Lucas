@@ -64,5 +64,10 @@
         android:label="AddOptions"
         tools:layout="@layout/add_options">
     </fragment>
+    <fragment
+        android:id="@+id/savedPostsFragment"
+        android:name="com.lucas.sashat.ui.home.SavedPostsFragment"
+        android:label="SavedPostsFragment"
+        tools:layout="@layout/fragment_saved_posts"/>
 
 </navigation>

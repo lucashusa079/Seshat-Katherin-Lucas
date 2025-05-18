@@ -144,7 +144,34 @@
                         android:textStyle="bold" />
 
                 </RelativeLayout>
-                <!-- Log out -->
+                <RelativeLayout
+                    android:id="@+id/rlSavePosts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:id="@+id/saveICon"
+                        android:layout_width="50dp"
+                        android:layout_height="45dp"
+                        android:padding="12dp"
+                        android:src="@drawable/baseline_bookmark_24" />
+
+                    <TextView
+                        android:id="@+id/tvSavePost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_toEndOf="@id/saveICon"
+                        android:importantForAccessibility="no"
+                        android:text="@string/SavePosts"
+                        android:textColor="@color/text"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/rlLogOut"
                     android:layout_width="match_parent"

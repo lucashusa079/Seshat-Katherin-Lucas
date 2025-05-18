@@ -83,6 +83,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         } else {
             holder.optionsButton.setVisibility(View.GONE);
         }
+        if (fragment instanceof HomeFragment && post.getUserId().equals(currentUserId)) {
+            holder.optionsButton.setVisibility(View.VISIBLE);
+            holder.optionsButton.setOnClickListener(v -> {
+                Bundle args = new Bundle();
+                args.putString("postId", post.getPostId());
+                args.putString("text", post.getText());
+                args.putString("genre", post.getGenre());
+                args.putString("imageUrl", post.getImageUrl());
+                NavController navController = NavHostFragment.findNavController(fragment);
+                navController.navigate(R.id.createPostFragment, args);
+            });
+        } else {
+            holder.optionsButton.setVisibility(View.GONE);
+        }
 
         db.collection("users")
                 .document(post.getUserId())
@@ -179,7 +193,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             showCommentDialog(holder.itemView.getContext(), postId);
         });
 
-        if (post.getUserId().equals(currentUserId)) {
+        if (fragment instanceof SavedPostsFragment) {
+            // Oculta el botón de opciones completamente
+            holder.optionsButton.setVisibility(View.GONE);
+        } else if (fragment instanceof HomeFragment && post.getUserId().equals(currentUserId)) {
             holder.optionsButton.setVisibility(View.VISIBLE);
             holder.optionsButton.setOnClickListener(v -> {
                 Bundle args = new Bundle();
@@ -190,18 +207,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 NavController navController = NavHostFragment.findNavController(fragment);
                 navController.navigate(R.id.action_nav_home_to_createPostFragment, args);
             });
-
-
         } else {
             holder.optionsButton.setVisibility(View.GONE);
         }
+
     }
     private void showOptionsDialog(Post post) {
+        // Evitar que se muestre desde fragments no permitidos
+        if (!(fragment instanceof HomeFragment)) return;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Opciones")
                 .setItems(new CharSequence[]{"Editar", "Eliminar"}, (dialog, which) -> {
                     if (which == 0) {
-                        // EDITAR
                         Bundle bundle = new Bundle();
                         bundle.putString("postId", post.getPostId());
                         bundle.putString("text", post.getText());
@@ -209,9 +227,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         bundle.putString("imageUrl", post.getImageUrl());
 
                         NavController navController = Navigation.findNavController(((Activity) context), R.id.nav_host_fragment_content_main);
-                        navController.navigate(R.id.action_nav_home_to_createPostFragment, bundle);
+                        navController.navigate(R.id.createPostFragment, bundle);
                     } else if (which == 1) {
-                        // ELIMINAR
                         deletePost(post.getPostId());
                     }
                 })

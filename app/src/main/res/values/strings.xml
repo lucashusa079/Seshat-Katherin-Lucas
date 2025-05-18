@@ -98,4 +98,5 @@
     <string name="a_adir_libro">Añadir libro</string>
     <string name="cerrar">Cerrar</string>
     <string name="publicar">Publicar</string>
+    <string name="SavePosts">Save Posts</string>
 </resources>
