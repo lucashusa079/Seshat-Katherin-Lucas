@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,6 +69,7 @@ public class CreatePostFragment extends Fragment {
     private FirebaseFirestore db;
     private Button deletePostButton;
     private String currentImageUrl;
+    private FirebaseAuth auth;
 
     public CreatePostFragment() {}
 
@@ -76,7 +78,7 @@ public class CreatePostFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_create_post, container, false);
 
         db = FirebaseFirestore.getInstance();
-
+        auth = FirebaseAuth.getInstance();
         postEditText = view.findViewById(R.id.postEditText);
         cameraButton = view.findViewById(R.id.cameraButton);
         galleryButton = view.findViewById(R.id.galleryButton);
@@ -234,9 +236,12 @@ public class CreatePostFragment extends Fragment {
                     .show();
         });
 
+        loadUserProfilePhoto();
 
         return view;
     }
+
+
     private void deleteImageFromImgur(String imageUrl) {
         String deleteHash = extractDeleteHash(imageUrl);
         if (deleteHash == null) return;
@@ -264,6 +269,31 @@ public class CreatePostFragment extends Fragment {
         });
     }
 
+    private void loadUserProfilePhoto() {
+        String currentUserId = auth.getCurrentUser().getUid();
+
+        db.collection("users")
+                .document(currentUserId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String photoUrl = documentSnapshot.getString("photoUrl");
+                        if (photoUrl != null && !photoUrl.isEmpty()) {
+                            Glide.with(this)
+                                    .load(photoUrl)
+                                    .transform(new CircleCrop())
+                                    .into(profileImageView);
+                        } else {
+                            profileImageView.setImageResource(R.drawable.boy); // Imagen por defecto
+                        }
+                    } else {
+                        profileImageView.setImageResource(R.drawable.boy);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    profileImageView.setImageResource(R.drawable.boy);
+                });
+    }
     // Extrae el ID de la imagen desde la URL (https://i.imgur.com/abc123.jpg => abc123)
     private String extractDeleteHash(String imageUrl) {
         try {
