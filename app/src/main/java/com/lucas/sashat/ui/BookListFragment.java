@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.lucas.sashat.Book;
+import com.lucas.sashat.BookDetailsBottomSheet;
 import com.lucas.sashat.BookGridAdapter;
 import com.lucas.sashat.R;
 
@@ -33,8 +34,6 @@ public class BookListFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
 
-    public BookListFragment() {}
-
     public static BookListFragment newInstance(String listType, String viewedUserId) {
         BookListFragment fragment = new BookListFragment();
         Bundle args = new Bundle();
@@ -50,6 +49,7 @@ public class BookListFragment extends Fragment {
         if (getArguments() != null) {
             listType = getArguments().getString(ARG_LIST_TYPE);
             viewedUserId = getArguments().getString(ARG_USER_ID);
+            Log.d(TAG, "Inicializando con listType: " + listType + ", viewedUserId: " + viewedUserId);
         }
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -58,9 +58,13 @@ public class BookListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "Creando vista para " + listType);
         View view = inflater.inflate(R.layout.fragment_book_list, container, false);
         recyclerView = view.findViewById(R.id.recycler_view_books);
         tvEmptyList = view.findViewById(R.id.tv_empty_list);
+        if (recyclerView == null || tvEmptyList == null) {
+            Log.e(TAG, "Error: recyclerView o tvEmptyList es nulo");
+        }
         return view;
     }
 
@@ -71,8 +75,11 @@ public class BookListFragment extends Fragment {
         // Configurar RecyclerView
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         books = new ArrayList<>();
-        adapter = new BookGridAdapter(getContext(), books);
+        adapter = new BookGridAdapter(getContext(), books, book -> {
+            showBookDetailsDialog(book);
+        });
         recyclerView.setAdapter(adapter);
+        Log.d(TAG, "RecyclerView configurado para " + listType);
 
         // Cargar libros
         loadBooks();
@@ -106,22 +113,38 @@ public class BookListFragment extends Fragment {
         db.collection("users")
                 .document(viewedUserId)
                 .collection(collectionPath)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Log.e(TAG, "Error al cargar libros", e);
+                        Toast.makeText(getContext(), "Error al cargar libros: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     List<Book> bookList = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        Book book = document.toObject(Book.class);
-                        bookList.add(book);
-                        Log.d(TAG, "Libro cargado: " + book.getTitle() + ", imageUrl: " + book.getImageUrl());
+                    if (queryDocumentSnapshots != null) {
+                        Log.d(TAG, "Documentos encontrados: " + queryDocumentSnapshots.size());
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            try {
+                                Book book = document.toObject(Book.class);
+                                bookList.add(book);
+                                Log.d(TAG, "Libro cargado: " + book.getTitle() + ", imageUri: " + book.getCoverImage());
+                            } catch (Exception ex) {
+                                Log.e(TAG, "Error al mapear documento: " + document.getId(), ex);
+                            }
+                        }
+                    } else {
+                        Log.w(TAG, "queryDocumentSnapshots es nulo");
                     }
                     Log.d(TAG, "Total libros cargados: " + bookList.size());
                     adapter.updateBooks(bookList);
                     tvEmptyList.setVisibility(bookList.isEmpty() ? View.VISIBLE : View.GONE);
                     recyclerView.setVisibility(bookList.isEmpty() ? View.GONE : View.VISIBLE);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error al cargar libros", e);
-                    Toast.makeText(getContext(), "Error al cargar libros: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "RecyclerView visibility: " + (recyclerView.getVisibility() == View.VISIBLE ? "VISIBLE" : "GONE"));
                 });
+    }
+
+    private void showBookDetailsDialog(Book book) {
+        BookDetailsBottomSheet dialog = BookDetailsBottomSheet.newInstance(book, viewedUserId, listType);
+        dialog.show(getParentFragmentManager(), "BookDetailsBottomSheet");
     }
 }

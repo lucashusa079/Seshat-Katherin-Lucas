@@ -40,7 +40,7 @@ public class AddFragment extends Fragment {
     private Spinner genreSpinner, stateSpinner;
     private ImageView bookImage;
     private Button selectImageButton, addButton;
-    private Uri imageUri;
+    private Uri coverImage;
     private FirebaseAuth auth;
     private FirebaseFirestore db;
 
@@ -104,8 +104,8 @@ public class AddFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            Glide.with(this).load(imageUri).into(bookImage);
+            coverImage = data.getData();
+            Glide.with(this).load(coverImage).into(bookImage);
         }
     }
 
@@ -155,7 +155,7 @@ public class AddFragment extends Fragment {
         bookData.put("author", author);
         bookData.put("genre", genre);
         bookData.put("description", description);
-        bookData.put("imageUri", imageUri != null ? imageUri.toString() : "");
+        bookData.put("coverImage", coverImage != null ? coverImage.toString() : "");
         bookData.put("addedBy", userId);
         bookData.put("timestamp", com.google.firebase.Timestamp.now());
 
@@ -245,6 +245,6 @@ public class AddFragment extends Fragment {
         genreSpinner.setSelection(0);
         stateSpinner.setSelection(0);
         bookImage.setImageResource(R.drawable.ic_book_placeholder);
-        imageUri = null;
+        coverImage = null;
     }
 }

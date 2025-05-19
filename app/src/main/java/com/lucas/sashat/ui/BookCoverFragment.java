@@ -38,19 +38,19 @@ public class BookCoverFragment extends Fragment {
                 Uri uri = Uri.parse(coverImage);
                 Glide.with(this)
                         .load(uri)
-                        .placeholder(R.drawable.boy)
-                        .error(R.drawable.boy)
+                        .placeholder(R.drawable.import_contacts_24px)
+                        .error(R.drawable.import_contacts_24px)
                         .into(ivBookCover);
             } catch (Exception e) {
                 // Si falla como URI, cargar como URL (para Google Books)
                 Glide.with(this)
                         .load(coverImage)
-                        .placeholder(R.drawable.boy)
-                        .error(R.drawable.boy)
+                        .placeholder(R.drawable.import_contacts_24px)
+                        .error(R.drawable.import_contacts_24px)
                         .into(ivBookCover);
             }
         } else {
-            ivBookCover.setImageResource(R.drawable.boy);
+            ivBookCover.setImageResource(R.drawable.import_contacts_24px);
         }
 
         return view;

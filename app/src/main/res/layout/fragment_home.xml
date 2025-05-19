@@ -12,6 +12,8 @@
 
     <!-- Título o logo (opcional) -->
     <ImageView
+
+        android:layout_marginTop="30dp"
         android:id="@+id/imageView"
         android:layout_width="213dp"
         android:layout_height="50dp"

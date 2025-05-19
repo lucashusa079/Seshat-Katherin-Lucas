@@ -8,6 +8,7 @@
 
     <!-- Barra de búsqueda arriba -->
     <androidx.appcompat.widget.SearchView
+        android:layout_marginTop="30dp"
         android:id="@+id/search_view"
         android:background="@drawable/rounded_search_background"
         android:layout_width="0dp"

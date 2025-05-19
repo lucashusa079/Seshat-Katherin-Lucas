@@ -1,58 +1,51 @@
 package com.lucas.sashat;
 
 import com.google.firebase.Timestamp;
-import java.util.List;
 
 public class Book {
     private String title;
     private String author;
-    private String imageUrl; // Puede ser un Uri local (content://) o una URL remota (https://)
-    private String description;
+    private String coverImage; // Cambiado de imageUrl a imageUri para coincidir con Firebase
+    private String notes; // Reemplaza description para las notas del usuario
     private String genre;
-    private double averageRating;
-    private int ratingsCount;
-    private List<String> recommendations;
-    private int recommendationsCount;
+    private double rating; // Para la puntuación del usuario (0.0 a 5.0)
     private String addedBy;
     private String id;
     private Timestamp timestamp;
-    private boolean isLocalImage; // Nuevo campo
+    private Timestamp startDate; // Fecha de inicio
+    private Timestamp endDate; // Fecha de fin
+    private boolean isLocalImage;
 
     public Book() {
-        this.averageRating = 0.0;
-        this.ratingsCount = 0;
-        this.recommendations = null;
-        this.recommendationsCount = 0;
+        this.rating = 0.0;
         this.isLocalImage = false;
     }
 
     // Getters
     public String getTitle() { return title; }
     public String getAuthor() { return author; }
-    public String getImageUrl() { return imageUrl; }
-    public String getDescription() { return description; }
+    public String getCoverImage() { return coverImage; }
+    public String getNotes() { return notes; }
     public String getGenre() { return genre; }
-    public double getAverageRating() { return averageRating; }
-    public int getRatingsCount() { return ratingsCount; }
-    public List<String> getRecommendations() { return recommendations; }
-    public int getRecommendationsCount() { return recommendationsCount; }
+    public double getRating() { return rating; }
     public String getAddedBy() { return addedBy; }
     public String getId() { return id; }
     public Timestamp getTimestamp() { return timestamp; }
+    public Timestamp getStartDate() { return startDate; }
+    public Timestamp getEndDate() { return endDate; }
     public boolean isLocalImage() { return isLocalImage; }
 
     // Setters
     public void setTitle(String title) { this.title = title; }
     public void setAuthor(String author) { this.author = author; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
-    public void setDescription(String description) { this.description = description; }
+    public void setCoverImage(String coverImage) { this.coverImage = coverImage; }
+    public void setNotes(String notes) { this.notes = notes; }
     public void setGenre(String genre) { this.genre = genre; }
-    public void setAverageRating(double averageRating) { this.averageRating = averageRating; }
-    public void setRatingsCount(int ratingsCount) { this.ratingsCount = ratingsCount; }
-    public void setRecommendations(List<String> recommendations) { this.recommendations = recommendations; }
-    public void setRecommendationsCount(int recommendationsCount) { this.recommendationsCount = recommendationsCount; }
+    public void setRating(double rating) { this.rating = rating; }
     public void setAddedBy(String addedBy) { this.addedBy = addedBy; }
     public void setId(String id) { this.id = id; }
     public void setTimestamp(Timestamp timestamp) { this.timestamp = timestamp; }
-    public void setLocalImage(boolean localImage) { isLocalImage = localImage; }
+    public void setStartDate(Timestamp startDate) { this.startDate = startDate; }
+    public void setEndDate(Timestamp endDate) { this.endDate = endDate; }
+    public void setLocalImage(boolean localImage) { this.isLocalImage = localImage; }
 }

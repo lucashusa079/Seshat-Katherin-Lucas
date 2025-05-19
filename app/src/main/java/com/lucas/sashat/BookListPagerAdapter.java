@@ -16,6 +16,7 @@ public class BookListPagerAdapter extends FragmentStateAdapter {
     public BookListPagerAdapter(@NonNull FragmentActivity fragmentActivity, String viewedUserId) {
         super(fragmentActivity);
         this.viewedUserId = viewedUserId;
+        Log.d("BookListPagerAdapter", "Inicializando con viewedUserId: " + viewedUserId);
     }
 
     @NonNull

@@ -301,7 +301,7 @@ public class SearchFragment extends Fragment {
         bookData.put("author", String.join(", ", book.getVolumeInfo().getAuthors()));
         bookData.put("genre", String.join(", ", book.getVolumeInfo().getCategories()));
         bookData.put("description", book.getVolumeInfo().getDescription() != null ? book.getVolumeInfo().getDescription() : "");
-        bookData.put("imageUrl", book.getVolumeInfo().getImageLinks() != null ?
+        bookData.put("coverImage", book.getVolumeInfo().getImageLinks() != null ?
                 (book.getVolumeInfo().getImageLinks().getThumbnail() != null ?
                         book.getVolumeInfo().getImageLinks().getThumbnail() : "") : "");
         bookData.put("addedBy", userId);
@@ -508,15 +508,15 @@ public class SearchFragment extends Fragment {
             bookAuthor.setText(getString(R.string.book_author) + " " + String.join(", ", book.getVolumeInfo().getAuthors()));
             bookGenre.setText(getString(R.string.book_genre) + " " + String.join(", ", book.getVolumeInfo().getCategories()));
 
-            String imageUrl = book.getVolumeInfo().getImageLinks() != null ?
+            String coverImage = book.getVolumeInfo().getImageLinks() != null ?
                     (book.getVolumeInfo().getImageLinks().getSmallThumbnail() != null ?
                             book.getVolumeInfo().getImageLinks().getSmallThumbnail() :
                             book.getVolumeInfo().getImageLinks().getThumbnail()) : null;
 
-            Log.d("SearchFragment", "Intentando cargar imagen para " + book.getVolumeInfo().getTitle() + ": " + imageUrl);
+            Log.d("SearchFragment", "Intentando cargar imagen para " + book.getVolumeInfo().getTitle() + ": " + coverImage);
 
             Glide.with(itemView.getContext())
-                    .load(imageUrl)
+                    .load(coverImage)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .override(90, 100)
                     .placeholder(R.drawable.import_contacts_24px)

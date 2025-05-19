@@ -12,10 +12,8 @@
         android:layout_width="100dp"
         android:layout_height="150dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/boy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/RoundedImage"
         app:strokeColor="@color/background"
         app:strokeWidth="2dp" />
 
@@ -60,7 +58,7 @@
         app:layout_constraintStart_toStartOf="@+id/tvBookAuthor"
         app:layout_constraintTop_toBottomOf="@+id/tvBookAuthor" />
 
-    <!-- Fecha de inicio -->
+    <!-- Fecha de inicio (clicable) -->
     <TextView
         android:id="@+id/tvStartDate"
         android:layout_width="0dp"
@@ -69,11 +67,14 @@
         android:text="Fecha de inicio: No disponible"
         android:textColor="@color/text"
         android:textSize="14sp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivBookCover" />
 
-    <!-- Fecha de finalización -->
+    <!-- Fecha de finalización (clicable) -->
     <TextView
         android:id="@+id/tvEndDate"
         android:layout_width="0dp"
@@ -82,6 +83,9 @@
         android:text="Fecha de finalización: No disponible"
         android:textColor="@color/text"
         android:textSize="14sp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvStartDate" />
@@ -95,25 +99,38 @@
         android:numStars="5"
         android:stepSize="1.0"
         android:rating="0"
-        android:isIndicator="true"
+        android:isIndicator="false"
         style="?android:attr/ratingBarStyleSmall"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvEndDate" />
 
-    <!-- Descripción del libro -->
-    <TextView
-        android:id="@+id/tvBookDescription"
+    <!-- Notas del libro -->
+    <EditText
+        android:id="@+id/etBookNotes"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Descripción: No disponible"
+        android:hint="Añade tus notas sobre el libro"
         android:textColor="@color/text"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rbRating" />
 
-    <!-- Botón para cerrar el BottomSheet -->
+    <!-- Botón para guardar cambios -->
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/textBtn"
+        android:text="Guardar"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etBookNotes" />
+
+    <!-- Botón para cerrar -->
     <Button
         android:id="@+id/btnClose"
         android:layout_width="wrap_content"
@@ -124,6 +141,6 @@
         android:textAllCaps="false"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvBookDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/etBookNotes" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
