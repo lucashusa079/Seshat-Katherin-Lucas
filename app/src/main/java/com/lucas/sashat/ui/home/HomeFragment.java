@@ -172,13 +172,13 @@ public class HomeFragment extends Fragment {
 
     private void showCommentDialog(Context context, String postId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Comentarios");
+        builder.setTitle(R.string.comentarios);
 
         final EditText input = new EditText(context);
-        input.setHint("Escribe un comentario...");
+        input.setHint(R.string.escribe_un_comentario);
         builder.setView(input);
 
-        builder.setPositiveButton("Enviar", (dialog, which) -> {
+        builder.setPositiveButton(R.string.enviar, (dialog, which) -> {
             String commentText = input.getText().toString().trim();
             if (!commentText.isEmpty()) {
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -197,7 +197,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.cancel());
 
         builder.show();
     }

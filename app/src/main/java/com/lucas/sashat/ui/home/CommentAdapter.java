@@ -38,7 +38,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         Comment comment = commentList.get(position);
         holder.commentText.setText(comment.getText());
 
-        // 🔥 Cargar nombre y foto del usuario desde Firestore
         db.collection("users")
                 .document(comment.getUserId())
                 .get()

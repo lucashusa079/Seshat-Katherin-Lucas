@@ -257,9 +257,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     private void confirmDelete(Post post) {
         new AlertDialog.Builder(context)
-                .setTitle("Confirmar eliminación")
-                .setMessage("¿Estás seguro de que deseas eliminar esta publicación?")
-                .setPositiveButton("Eliminar", (dialog, which) -> {
+                .setTitle(R.string.confirmar_eliminaci_n)
+                .setMessage(R.string.estas_seguro)
+                .setPositiveButton(R.string.eliminar, (dialog, which) -> {
                     FirebaseFirestore.getInstance().collection("posts")
                             .document(post.getPostId())
                             .delete()

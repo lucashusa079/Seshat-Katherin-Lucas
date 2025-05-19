@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- String lucas -->
+    <string name="title_search">Suchen</string>
+    <string name="title_add">Hinzufügen</string>
+    <string name="title_personal">Persönlich</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">E-Mail</string>
+    <string name="prompt_password">Passwort</string>
+    <string name="action_sign_in">Anmelden oder Registrieren</string>
+    <string name="action_sign_in_short">Anmelden</string>
+    <string name="welcome">"Willkommen!"</string>
+    <string name="invalid_username">Ungültiger Benutzer</string>
+    <string name="invalid_password">Das Passwort muss mindestens 5 Zeichen lang sein</string>
+    <string name="login_failed">Anmeldung fehlgeschlagen</string>
+    <string name="user_successfuly_added">Benutzer erfolgreich hinzugefügt</string>
+    <string name="user_failed_to_add">Fehler beim Hinzufügen des Benutzers</string>
+    <string name="book_successfuly_added">Buch erfolgreich hinzugefügt</string>
+    <string name="book_failed_to_add">Fehler beim Hinzufügen des Buches</string>
+    <string name="post_successfuly_added">Beitrag erfolgreich hinzugefügt</string>
+    <string name="post_failed_to_add">Fehler beim Hinzufügen des Beitrags</string>
+    <string name="comment_successfuly_added">Kommentar erfolgreich hinzugefügt</string>
+    <string name="comment_failed_to_add">Fehler beim Hinzufügen des Kommentars</string>
+
+    <!-- Strings Katherin -->
+    <string name="app_name">Seshat</string>
+    <string name="email">E-Mail</string>
+    <string name="password">Passwort</string>
+    <string name="log_in">Anmelden</string>
+    <string name="forgoPassword">Passwort vergessen?</string>
+    <string name="create_account">Konto erstellen</string>
+    <string name="user">Benutzername</string>
+    <string name="helper_textPassword">Passwörter müssen mindestens 6 Zeichen lang sein</string>
+    <string name="already_have_an_account">Hast du schon ein Konto?</string>
+    <string name="signIn">Jetzt anmelden</string>
+    <string name="enter_email">E-Mail eingeben</string>
+    <string name="enter_password">Passwort eingeben</string>
+    <string name="login_successful">Anmeldung erfolgreich</string>
+    <string name="authentication_failed">Authentifizierung fehlgeschlagen.</string>
+    <string name="enter_user">Benutzername eingeben</string>
+    <string name="account_created">Konto erstellt.</string>
+    <string name="restablecer_contrase_a">Passwort zurücksetzen</string>
+    <string name="enviar">Senden</string>
+    <string name="ingresa_un_correo_v_lido">Gültige E-Mail eingeben</string>
+    <string name="cancelar">Abbrechen</string>
+    <string name="correo_enviado">E-Mail gesendet. Überprüfe deinen Posteingang.</string>
+    <string name="error_correo">Fehler beim Senden der E-Mail</string>
+    <string name="books_read">Gelesene Bücher</string>
+    <string name="follow_">Folgen</string>
+    <string name="book_title">Titel:</string>
+    <string name="book_author">Autor:</string>
+    <string name="book_genre">Genre:</string>
+    <string name="tittle_home">Startseite</string>
+    <string name="chats">Chats</string>
+
+    <string-array name="genres">
+        <item>Belletristik</item>
+        <item>Sachbuch</item>
+        <item>Krimi</item>
+        <item>Thriller</item>
+        <item>Romanze</item>
+        <item>Science-Fiction</item>
+        <item>Fantasy</item>
+        <item>Historischer Roman</item>
+        <item>Biografie</item>
+        <item>Autobiografie</item>
+        <item>Ratgeber</item>
+        <item>Geschichte</item>
+        <item>Wissenschaft</item>
+        <item>Reise</item>
+        <item>Kochen</item>
+        <item>Kinder</item>
+        <item>Jugend</item>
+        <item>Poesie</item>
+    </string-array>
+
+    <string name="share">Teilen</string>
+    <string name="bookmark">Lesezeichen</string>
+    <string name="comment">Kommentieren</string>
+    <string name="like">Gefällt mir</string>
+    <string name="qu_est_s_pensando">Woran denkst du?</string>
+    <string name="a_adir_libro">Buch hinzufügen</string>
+    <string name="cerrar">Schließen</string>
+    <string name="publicar">Veröffentlichen</string>
+    <string name="SavePosts">Beiträge speichern</string>
+    <string name="description">Beschreibung</string>
+    <string name="change_photo">Foto ändern</string>
+    <string name="settings">Einstellungen</string>
+    <string name="night_mode">Nachtmodus</string>
+    <string name="notifications">Benachrichtigungen</string>
+    <string name="language">Sprache</string>
+    <string name="log_out">Abmelden</string>
+    <string name="choose_language">Sprache wählen</string>
+    <string name="username_exists">Benutzername existiert bereits</string>
+    <string name="email_verification_sent">E-Mail-Bestätigung gesendet</string>
+    <string name="email_verification_failed">E-Mail-Bestätigung fehlgeschlagen</string>
+    <string name="error_checking_username">Fehler: Benutzername bereits vergeben</string>
+
+    <string name="profile">Profilbild</string>
+    <string name="username">Benutzername</string>
+    <string name="user_description">Profilbeschreibung</string>
+    <string name="followers_count">15</string>
+    <string name="followers_label">Follower</string>
+    <string name="following_count">5</string>
+    <string name="following_label">Folge ich</string>
+    <string name="edit_profile">Profil bearbeiten</string>
+    <string name="follow">Folgen</string>
+    <string name="unfollow">Entfolgen</string>
+    <string name="menu">Menü</string>
+    <string name="read">Gelesen</string>
+    <string name="reading">Lese ich</string>
+    <string name="pending_read">Leseliste</string>
+    <string name="book_cover">Buchcover</string>
+    <string name="empty_list">Keine Bücher in dieser Liste</string>
+
+    <!-- Spinner-Optionen -->
+    <string-array name="book_lists">
+        <item>Gelesen</item>
+        <item>Lese ich</item>
+        <item>Leseliste</item>
+    </string-array>
+
+    <!-- Buchansicht -->
+    <string name="book_title_placeholder">Buchtitel</string>
+    <string name="book_author_placeholder">Buchautor</string>
+    <string name="book_genre_placeholder">Buchgenre</string>
+    <string name="start_date_label">Startdatum:</string>
+    <string name="start_date_hint">yyyy-MM-dd</string>
+    <string name="end_date_label">Enddatum:</string>
+    <string name="end_date_hint">yyyy-MM-dd</string>
+    <string name="notes_label">Notizen:</string>
+    <string name="notes_hint">Schreibe hier deine Notizen …</string>
+    <string name="favorite_characters_label">Lieblingsfiguren:</string>
+    <string name="favorite_characters_hint">Liste deine Lieblingsfiguren auf …</string>
+    <string name="debes_iniciar_sesi_n_para_a_adir_un_libro">Du musst dich anmelden, um ein Buch hinzuzufügen</string>
+    <string name="por_favor_completa_todos_los_campos">Bitte fülle alle Felder aus</string>
+    <string name="libro_a_adido_a">"Buch hinzugefügt zu "</string>
+    <string name="error_al_cargar_usuario">Fehler beim Laden des Benutzers</string>
+    <string name="por_favor_escribe_algo_para_publicar">Bitte schreibe etwas, um es zu veröffentlichen.</string>
+    <string name="por_favor_selecciona_un_g_nero_literario">Bitte wähle ein Genre.</string>
+    <string name="publicando">Veröffentliche …</string>
+    <string name="error_al_procesar_la_imagen">Fehler beim Verarbeiten des Bildes</string>
+    <string name="eliminar_publicaci_n">Beitrag löschen?</string>
+    <string name="estas_seguro">Bist du sicher, dass du diesen Beitrag löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="eliminar">Löschen</string>
+    <string name="post_eliminado">Beitrag gelöscht</string>
+    <string name="publicaci_n_exitosa">Beitrag erfolgreich veröffentlicht</string>
+    <string name="comentarios">Kommentare</string>
+    <string name="escribe_un_comentario">Schreibe einen Kommentar …</string>
+    <string name="confirmar_eliminaci_n">Löschung bestätigen</string>
+
+</resources>

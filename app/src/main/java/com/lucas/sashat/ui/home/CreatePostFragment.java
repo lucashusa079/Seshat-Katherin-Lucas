@@ -2,6 +2,7 @@ package com.lucas.sashat.ui.home;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -150,7 +151,7 @@ public class CreatePostFragment extends Fragment {
                             usernameTextView.setText(username);
                         }
                     })
-                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al cargar usuario", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), R.string.error_al_cargar_usuario, Toast.LENGTH_SHORT).show());
         }
 
         SharedPreferences prefs = requireContext().getSharedPreferences("perfil", Context.MODE_PRIVATE);
@@ -186,19 +187,19 @@ public class CreatePostFragment extends Fragment {
             String selectedGenre = genreSpinner.getSelectedItem().toString();
 
             if (postText.isEmpty()) {
-                Toast.makeText(getContext(), "Por favor escribe algo para publicar.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.por_favor_escribe_algo_para_publicar, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (selectedGenre.equals("Selecciona un género") || selectedGenre.isEmpty()) {
-                Toast.makeText(getContext(), "Por favor selecciona un género literario.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.por_favor_selecciona_un_g_nero_literario, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (currentUser != null) {
                 String userId = currentUser.getUid();
                 if (postId == null) {
-                    postId = UUID.randomUUID().toString(); // Solo generamos uno nuevo si es creación
+                    postId = UUID.randomUUID().toString();
                 }
 
                 Map<String, Object> post = new HashMap<>();
@@ -210,7 +211,7 @@ public class CreatePostFragment extends Fragment {
 
 
                 publishButton.setEnabled(false);
-                publishButton.setText("Publicando...");
+                publishButton.setText(R.string.publicando);
 
                 if (selectedImageUri != null) {
                     new Thread(() -> {
@@ -219,25 +220,25 @@ public class CreatePostFragment extends Fragment {
                             requireActivity().runOnUiThread(() -> uploadImageToImgur(file, postId, post));
                         } catch (IOException e) {
                             requireActivity().runOnUiThread(() -> {
-                                Toast.makeText(getContext(), "Error al procesar la imagen", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.error_al_procesar_la_imagen, Toast.LENGTH_SHORT).show();
                                 publishButton.setEnabled(true);
-                                publishButton.setText("Publicar");
+                                publishButton.setText(R.string.publicar);
                             });
                         }
                     }).start();
                 } else {
                     savePostToFirestore(postId, post);
                     publishButton.setEnabled(true);
-                    publishButton.setText("Publicar");
+                    publishButton.setText(R.string.publicar);
                 }
             }
         });
 
         deletePostButton.setOnClickListener(v -> {
-            new android.app.AlertDialog.Builder(getContext())
-                    .setTitle("¿Eliminar publicación?")
-                    .setMessage("¿Estás seguro de que deseas eliminar esta publicación? Esta acción no se puede deshacer.")
-                    .setPositiveButton("Eliminar", (dialog, which) -> {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.eliminar_publicaci_n)
+                    .setMessage(R.string.estas_seguro)
+                    .setPositiveButton(R.string.eliminar, (dialog, which) -> {
                         if (postId != null) {
                             db.collection("posts").document(postId)
                                     .delete()
@@ -245,7 +246,7 @@ public class CreatePostFragment extends Fragment {
                                         if (currentImageUrl != null) {
                                             deleteImageFromImgur(currentImageUrl);
                                         }
-                                        Toast.makeText(getContext(), "Post eliminado", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), R.string.post_eliminado, Toast.LENGTH_SHORT).show();
                                         NavHostFragment.findNavController(CreatePostFragment.this).popBackStack();
                                     })
                                     .addOnFailureListener(e ->
@@ -253,7 +254,7 @@ public class CreatePostFragment extends Fragment {
                                     );
                         }
                     })
-                    .setNegativeButton("Cancelar", null)
+                    .setNegativeButton(R.string.cancelar, null)
                     .show();
         });
 
@@ -358,7 +359,7 @@ public class CreatePostFragment extends Fragment {
                     Toast.makeText(getContext(), "Error al subir imagen: " + response.code(), Toast.LENGTH_LONG).show();
 
                     publishButton.setEnabled(true);
-                    publishButton.setText("Publicar");
+                    publishButton.setText(R.string.publicar);
                 }
             }
 
@@ -368,7 +369,7 @@ public class CreatePostFragment extends Fragment {
                 Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
 
                 publishButton.setEnabled(true);
-                publishButton.setText("Publicar");
+                publishButton.setText(R.string.publicar);
             }
         });
     }
@@ -376,20 +377,19 @@ public class CreatePostFragment extends Fragment {
     private void savePostToFirestore(String postId, Map<String, Object> post) {
         db.collection("posts").document(postId).set(post)
                 .addOnSuccessListener(unused -> {
-                    Toast.makeText(getContext(), "Publicación exitosa", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.publicaci_n_exitosa, Toast.LENGTH_SHORT).show();
                     publishButton.setEnabled(true);
-                    publishButton.setText("Publicar");
+                    publishButton.setText(R.string.publicar);
                     NavHostFragment.findNavController(CreatePostFragment.this).popBackStack();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Error al guardar publicación", Toast.LENGTH_SHORT).show();
                     publishButton.setEnabled(true);
-                    publishButton.setText("Publicar");
+                    publishButton.setText(R.string.publicar);
                 });
     }
 
     private void deleteImageFromImgur(String imageUrl) {
-        // Aquí implementa tu lógica para eliminar la imagen en Imgur, si la tienes
     }
 
     private void openGallery() {
@@ -398,7 +398,6 @@ public class CreatePostFragment extends Fragment {
     }
 
     private void openCamera() {
-        // Aquí implementa abrir cámara si quieres
     }
 
     @Override
