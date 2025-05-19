@@ -9,6 +9,7 @@
     <!-- Barra de búsqueda arriba -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
+        android:background="@drawable/rounded_search_background"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -28,7 +29,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/background_card"
+        android:backgroundTint="@color/fondoSettings"
         app:layout_constraintTop_toBottomOf="@+id/search_view">
 
         <androidx.recyclerview.widget.RecyclerView
