@@ -18,6 +18,8 @@ public class Book {
     private Timestamp startDate; // Fecha de inicio
     private Timestamp endDate; // Fecha de fin
     private boolean isLocalImage;
+    private String documentId;
+
 
     public Book() {
         this.rating = 0.0;
@@ -37,7 +39,9 @@ public class Book {
     public Timestamp getStartDate() { return startDate; }
     public Timestamp getEndDate() { return endDate; }
     public boolean isLocalImage() { return isLocalImage; }
-
+    public String getDocumentId() {
+        return documentId;
+    }
     // Setters
     public void setTitle(String title) { this.title = title; }
     public void setAuthor(String author) { this.author = author; }
@@ -51,4 +55,7 @@ public class Book {
     public void setStartDate(Timestamp startDate) { this.startDate = startDate; }
     public void setEndDate(Timestamp endDate) { this.endDate = endDate; }
     public void setLocalImage(boolean localImage) { this.isLocalImage = localImage; }
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
 }

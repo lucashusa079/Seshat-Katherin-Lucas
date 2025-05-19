@@ -74,24 +74,24 @@
     <string name="chats">Chats</string>
 
     <string-array name="genres">
-        <item>Ficción</item>
-        <item>No ficción</item>
-        <item>Misterio</item>
-        <item>Suspenso</item>
+        <item>Fiction</item>
+        <item>Non-fiction</item>
+        <item>Mystery</item>
+        <item>Thriller</item>
         <item>Romance</item>
-        <item>Ciencia ficción</item>
-        <item>Fantasía</item>
-        <item>Ficción histórica</item>
-        <item>Biografía</item>
-        <item>Autobiografía</item>
-        <item>Autoayuda</item>
-        <item>Historia</item>
-        <item>Ciencia</item>
-        <item>Viajes</item>
-        <item>Cocina</item>
-        <item>Infantil</item>
-        <item>Juvenil</item>
-        <item>Poesía</item>
+        <item>Science Fiction</item>
+        <item>Fantasy</item>
+        <item>Historical Fiction</item>
+        <item>Biography</item>
+        <item>Autobiography</item>
+        <item>Self-Help</item>
+        <item>History</item>
+        <item>Science</item>
+        <item>Travel</item>
+        <item>Cooking</item>
+        <item>Children</item>
+        <item>Young Adult</item>
+        <item>Poetry</item>
     </string-array>
 
     <string name="share">Compartir</string>

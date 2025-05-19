@@ -3,6 +3,7 @@ package com.lucas.sashat;
 import android.app.DatePickerDialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.parceler.Parcels;
@@ -90,11 +92,23 @@ public class BookDetailsBottomSheet extends BottomSheetDialogFragment {
 
         if (book.getCoverImage() != null && !book.getCoverImage().isEmpty()) {
             try {
-                if (book.isLocalImage()) {
-                    Uri uri = Uri.parse(book.getCoverImage());
-                    Glide.with(this).load(uri).placeholder(R.drawable.ic_book_placeholder).error(R.drawable.ic_book_placeholder).into(ivBookCover);
+                String coverImage = book.getCoverImage();
+
+                if (coverImage.startsWith("http://") || coverImage.startsWith("https://")) {
+                    // Es URL remota
+                    Glide.with(this)
+                            .load(coverImage)
+                            .placeholder(R.drawable.ic_book_placeholder)
+                            .error(R.drawable.ic_book_placeholder)
+                            .into(ivBookCover);
                 } else {
-                    Glide.with(this).load(book.getCoverImage()).placeholder(R.drawable.ic_book_placeholder).error(R.drawable.ic_book_placeholder).into(ivBookCover);
+                    // Es URI local o path local
+                    Uri uri = Uri.parse(coverImage);
+                    Glide.with(this)
+                            .load(uri)
+                            .placeholder(R.drawable.ic_book_placeholder)
+                            .error(R.drawable.ic_book_placeholder)
+                            .into(ivBookCover);
                 }
             } catch (Exception e) {
                 ivBookCover.setImageResource(R.drawable.ic_book_placeholder);
@@ -109,27 +123,40 @@ public class BookDetailsBottomSheet extends BottomSheetDialogFragment {
 
         // Guardar cambios
         btnSave.setOnClickListener(v -> {
-            String newNotes = etBookNotes.getText().toString();
-            float newRating = rbRating.getRating();
+            String startDate = tvStartDate.getText().toString();
+            String endDate = tvEndDate.getText().toString();
+            float rating = rbRating.getRating();
+            String notes = etBookNotes.getText().toString();
 
-            String collectionPath = getCollectionPath();
-            Map<String, Object> updates = new HashMap<>();
-            updates.put("notes", newNotes);
-            updates.put("rating", newRating);
-            updates.put("startDate", book.getStartDate());
-            updates.put("endDate", book.getEndDate());
+            if (book.getDocumentId() != null && !book.getDocumentId().isEmpty()) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference bookRef = db
+                        .collection("users")
+                        .document(userId)
+                        .collection(getCollectionPath())
+                        .document(book.getId());
 
-            db.collection("users")
-                    .document(userId)
-                    .collection(collectionPath)
-                    .document(book.getId())
-                    .update(updates)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(getContext(), "Cambios guardados", Toast.LENGTH_SHORT).show();
-                        dismiss();
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al guardar cambios", Toast.LENGTH_SHORT).show());
+
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("startDate", book.getStartDate());
+                updates.put("endDate", book.getEndDate());
+                updates.put("rating", rating);
+                updates.put("notes", notes);
+
+                bookRef.update(updates)
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d("BookDetailsBottomSheet", "Datos actualizados correctamente.");
+                            dismiss(); // cerrar el BottomSheet si quieres
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("BookDetailsBottomSheet", "Error al actualizar datos", e);
+                        });
+            } else {
+                // opcional: manejar caso para libros locales si quieres
+                Log.d("BookDetailsBottomSheet", "Este libro no está en Firebase");
+            }
         });
+
 
         // Cerrar
         btnClose.setOnClickListener(v -> dismiss());
