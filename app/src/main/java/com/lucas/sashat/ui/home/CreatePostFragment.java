@@ -202,10 +202,12 @@ public class CreatePostFragment extends Fragment {
                 }
 
                 Map<String, Object> post = new HashMap<>();
+                post.put("postId", postId);
                 post.put("userId", userId);
                 post.put("text", postText);
                 post.put("genre", selectedGenre);
                 post.put("timestamp", Timestamp.now());
+
 
                 publishButton.setEnabled(false);
                 publishButton.setText("Publicando...");

@@ -63,6 +63,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = posts.get(position);
         String postId = post.getPostId();
+        if (post.getPostId() == null) {
+            // Ignora posts sin ID para evitar errores en Firestore paths
+            return;
+        }
 
         holder.postText.setText(post.getText());
         holder.genre.setText("Género: " + post.getGenre());
@@ -155,21 +159,37 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 });
 
         holder.bookmarkButton.setOnClickListener(v -> {
-            String bookmarkPath = "bookmarks/" + currentUserId + "/posts/" + postId;
+            String bookmarkPath = "saved/" + currentUserId + "/posts/" + postId;
             db.document(bookmarkPath).get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
                     db.document(bookmarkPath).delete().addOnSuccessListener(unused -> {
-                        holder.bookmarkButton.setImageResource(R.drawable.ic_bookmark); // Icono no guardado
+                        holder.bookmarkButton.setImageResource(R.drawable.ic_bookmark);
+
+                        if (fragment instanceof SavedPostsFragment) {
+                            int index = holder.getAdapterPosition();
+                            if (index != RecyclerView.NO_POSITION) {
+                                posts.remove(index);
+                                notifyItemRemoved(index);
+                            }
+                        }
                     });
                 } else {
                     HashMap<String, Object> bookmarkData = new HashMap<>();
+                    bookmarkData.put("postId", post.getPostId());
+                    bookmarkData.put("text", post.getText());
+                    bookmarkData.put("genre", post.getGenre());
+                    bookmarkData.put("imageUrl", post.getImageUrl());
+                    bookmarkData.put("userId", post.getUserId());
                     bookmarkData.put("timestamp", new Timestamp(new Date()));
+
                     db.document(bookmarkPath).set(bookmarkData).addOnSuccessListener(unused -> {
-                        holder.bookmarkButton.setImageResource(R.drawable.savebutton); // Icono guardado
+                        holder.bookmarkButton.setImageResource(R.drawable.savebutton);
                     });
                 }
             });
         });
+
+
 
         db.collection("saved")
                 .document(currentUserId)

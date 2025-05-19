@@ -13,9 +13,19 @@ public class Post {
     private String imageUrl;
     private String postId;
     private Date timestamp;
-
+    @Exclude
+    private boolean isBookmarked;
 
     public Post() {
+    }
+    @Exclude
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
+    @Exclude
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
     }
     public Date getTimestamp() {
         return timestamp;
@@ -49,6 +59,7 @@ public class Post {
     public String getUsername() {
         return username != null ? username : "Usuario";
     }
+    
     public void setPostId(String postId) {
         this.postId = postId;
     }
