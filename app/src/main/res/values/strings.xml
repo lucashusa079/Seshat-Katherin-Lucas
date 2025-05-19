@@ -1,25 +1,26 @@
 <resources>
     <!-- String lucas -->
-    <string name="title_search">Buscar</string>
-    <string name="title_add">Agregar</string>
+    <string name="title_search">Search</string>
+    <string name="title_add">Add</string>
     <string name="title_personal">Personal</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Contraseña</string>
-    <string name="action_sign_in">Iniciar sesion o Registrarse</string>
-    <string name="action_sign_in_short">Iniciar Sesion</string>
-    <string name="welcome">"Bienvenido !"</string>
-    <string name="invalid_username">El usuario invalido</string>
-    <string name="invalid_password">La contraseña debe ser de al menos 5 caracteres</string>
-    <string name="login_failed">Fallo al iniciar sesion</string>
-    <string name="user_successfuly_added">Usuario agregado con éxito</string>
-    <string name="user_failed_to_add">Error al agregar el usuario</string>
-    <string name="book_successfuly_added">Libro agregado con éxito</string>
-    <string name="book_failed_to_add">Error al agregar el libro</string>
-    <string name="post_successfuly_added">Post agregado con éxito</string>
-    <string name="post_failed_to_add">Error al agregar el post</string>
-    <string name="comment_successfuly_added">Comentario agregado con éxito</string>
-    <string name="comment_failed_to_add">Error al agregar el comentario</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or Register</string>
+    <string name="action_sign_in_short">Sign In</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Invalid user</string>
+    <string name="invalid_password">The password must be at least 5 characters</string>
+    <string name="login_failed">Login failed</string>
+    <string name="user_successfuly_added">User added successfully</string>
+    <string name="user_failed_to_add">Error adding user</string>
+    <string name="book_successfuly_added">Book added successfully</string>
+    <string name="book_failed_to_add">Error adding book</string>
+    <string name="post_successfuly_added">Post added successfully</string>
+    <string name="post_failed_to_add">Error adding post</string>
+    <string name="comment_successfuly_added">Comment added successfully</string>
+    <string name="comment_failed_to_add">Error adding comment</string>
+
     <!-- Strings Katherin -->
     <string name="app_name">Seshat</string>
     <string name="email">Email</string>
@@ -30,46 +31,47 @@
     <string name="user">Username</string>
     <string name="helper_textPassword">Passwords must be at least 6 characters</string>
     <string name="already_have_an_account">Already have an account?</string>
-    <string name="signIn">Sign-In now</string>
+    <string name="signIn">Sign in now</string>
     <string name="enter_email">Enter email</string>
     <string name="enter_password">Enter password</string>
-    <string name="login_successful">Login Successful</string>
+    <string name="login_successful">Login successful</string>
     <string name="authentication_failed">Authentication failed.</string>
-    <string name="enter_user">Enter user</string>
+    <string name="enter_user">Enter username</string>
     <string name="account_created">Account created.</string>
-    <string name="restablecer_contrase_a">Restablecer Contraseña</string>
-    <string name="enviar">Enviar</string>
-    <string name="ingresa_un_correo_v_lido">Ingresa un correo válido</string>
-    <string name="cancelar">Cancelar</string>
-    <string name="correo_enviado">Correo enviado. Revisa tu bandeja de entrada.</string>
-    <string name="error_correo">Error al enviar el correo</string>
-<!--    <string name="profile">profile\n</string>-->
-    <string name="books_read">books read</string>
-<!--    <string name="edit_profile">Edit profile</string>-->
-<!--    <string name="read">Read</string>-->
-<!--    <string name="reading">Reading</string>-->
-<!--    <string name="pending_read">Pending read</string>-->
-<!--    <string name="username">username</string>-->
-<!--    <string name="description">Description</string>-->
-<!--    <string name="follow">Follow</string>-->
+    <string name="restablecer_contrase_a">Reset Password</string>
+    <string name="enviar">Send</string>
+    <string name="ingresa_un_correo_v_lido">Enter a valid email</string>
+    <string name="cancelar">Cancel</string>
+    <string name="correo_enviado">Email sent. Check your inbox.</string>
+    <string name="error_correo">Error sending email</string>
+    <!--    <string name="profile">profile\n</string>-->
+    <string name="books_read">Books read</string>
+    <!--    <string name="edit_profile">Edit profile</string>-->
+    <!--    <string name="read">Read</string>-->
+    <!--    <string name="reading">Reading</string>-->
+    <!--    <string name="pending_read">Pending read</string>-->
+    <!--    <string name="username">username</string>-->
+    <!--    <string name="description">Description</string>-->
+    <!--    <string name="follow">Follow</string>-->
     <string name="follow_">Follow</string>
-<!--    <string name="unfollow">Unfollow</string>-->
-<!--    <string name="change_photo">Change photo</string>-->
-<!--    <string name="settings">Settings</string>-->
-<!--    <string name="night_mode">Night Mode</string>-->
-<!--    <string name="notifications">Notifications</string>-->
-<!--    <string name="language">Language</string>-->
-<!--    <string name="log_out">Log Out</string>-->
-<!--    <string name="choose_language">Choose language</string>-->
-<!--    <string name="username_exists">username exists</string>-->
-<!--    <string name="email_verification_sent">email verification sent</string>-->
-<!--    <string name="email_verification_failed">email verification failed</string>-->
-<!--    <string name="error_checking_username">error the user name is already in use</string>-->
+    <!--    <string name="unfollow">Unfollow</string>-->
+    <!--    <string name="change_photo">Change photo</string>-->
+    <!--    <string name="settings">Settings</string>-->
+    <!--    <string name="night_mode">Night Mode</string>-->
+    <!--    <string name="notifications">Notifications</string>-->
+    <!--    <string name="language">Language</string>-->
+    <!--    <string name="log_out">Log Out</string>-->
+    <!--    <string name="choose_language">Choose language</string>-->
+    <!--    <string name="username_exists">username exists</string>-->
+    <!--    <string name="email_verification_sent">email verification sent</string>-->
+    <!--    <string name="email_verification_failed">email verification failed</string>-->
+    <!--    <string name="error_checking_username">error the user name is already in use</string>-->
     <string name="book_title">Title:</string>
     <string name="book_author">Author:</string>
     <string name="book_genre">Genre:</string>
     <string name="tittle_home">Home</string>
-    <string name="chats">chats</string>
+    <string name="chats">Chats</string>
+
     <string-array name="genres">
         <item>Fiction</item>
         <item>Non-fiction</item>
@@ -90,26 +92,27 @@
         <item>Young Adult</item>
         <item>Poetry</item>
     </string-array>
+
     <string name="share">Share</string>
     <string name="bookmark">Bookmark</string>
     <string name="comment">Comment</string>
     <string name="like">Like</string>
-    <string name="qu_est_s_pensando">¿Qué estás pensando?</string>
-    <string name="a_adir_libro">Añadir libro</string>
-    <string name="cerrar">Cerrar</string>
-    <string name="publicar">Publicar</string>
+    <string name="qu_est_s_pensando">What are you thinking?</string>
+    <string name="a_adir_libro">Add book</string>
+    <string name="cerrar">Close</string>
+    <string name="publicar">Publish</string>
     <string name="SavePosts">Save Posts</string>
-<!--    <string name="profile">profile\n</string>-->
-<!--    <string name="books_read">books read</string>-->
-<!--    <string name="edit_profile">Edit profile</string>-->
-<!--    <string name="read">Read</string>-->
-<!--    <string name="reading">Reading</string>-->
-<!--    <string name="pending_read">Pending read</string>-->
-<!--    <string name="username">username</string>-->
+    <!--    <string name="profile">profile\n</string>-->
+    <!--    <string name="books_read">books read</string>-->
+    <!--    <string name="edit_profile">Edit profile</string>-->
+    <!--    <string name="read">Read</string>-->
+    <!--    <string name="reading">Reading</string>-->
+    <!--    <string name="pending_read">Pending read</string>-->
+    <!--    <string name="username">username</string>-->
     <string name="description">Description</string>
-<!--    <string name="follow">Follow</string>-->
-<!--    <string name="follow_">Follow</string>-->
-<!--    <string name="unfollow">Unfollow</string>-->
+    <!--    <string name="follow">Follow</string>-->
+    <!--    <string name="follow_">Follow</string>-->
+    <!--    <string name="unfollow">Unfollow</string>-->
     <string name="change_photo">Change photo</string>
     <string name="settings">Settings</string>
     <string name="night_mode">Night Mode</string>
@@ -117,47 +120,62 @@
     <string name="language">Language</string>
     <string name="log_out">Log Out</string>
     <string name="choose_language">Choose language</string>
-    <string name="username_exists">username exists</string>
-    <string name="email_verification_sent">email verification sent</string>
-    <string name="email_verification_failed">email verification failed</string>
-    <string name="error_checking_username">error the user name is already in use</string>
+    <string name="username_exists">Username exists</string>
+    <string name="email_verification_sent">Email verification sent</string>
+    <string name="email_verification_failed">Email verification failed</string>
+    <string name="error_checking_username">Error: the username is already in use</string>
 
-    <string name="profile">Imagen de perfil</string>
+    <string name="profile">Profile picture</string>
     <string name="username">Username</string>
-    <string name="user_description">Descripción del perfil</string>
+    <string name="user_description">Profile description</string>
     <string name="followers_count">15</string>
-    <string name="followers_label">seguidores</string>
+    <string name="followers_label">followers</string>
     <string name="following_count">5</string>
-    <string name="following_label">seguidos</string>
-    <string name="edit_profile">Editar perfil</string>
-    <string name="follow">Seguir</string>
-    <string name="unfollow">Dejar de seguir</string>
-    <string name="menu">Menú</string>
-    <string name="read">Leídos</string>
-    <string name="reading">Leyendo</string>
-    <string name="pending_read">Por Leer</string>
-    <string name="book_cover">Portada del libro</string>
-    <string name="empty_list">No hay libros en esta lista</string>
+    <string name="following_label">following</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="menu">Menu</string>
+    <string name="read">Read</string>
+    <string name="reading">Reading</string>
+    <string name="pending_read">To Read</string>
+    <string name="book_cover">Book cover</string>
+    <string name="empty_list">No books in this list</string>
 
-
-    <!-- Opciones para el Spinner de listas -->
+    <!-- Spinner list options -->
     <string-array name="book_lists">
-        <item>Leídos</item>
-        <item>Leyendo</item>
-        <item>Por Leer</item>
+        <item>Read</item>
+        <item>Reading</item>
+        <item>To Read</item>
     </string-array>
 
-    <!-- Vista libros -->
-    <string name="book_title_placeholder">Título del libro</string>
-    <string name="book_author_placeholder">Autor del libro</string>
-    <string name="book_genre_placeholder">Género del libro</string>
-    <string name="start_date_label">Fecha de inicio:</string>
+    <!-- Book view -->
+    <string name="book_title_placeholder">Book title</string>
+    <string name="book_author_placeholder">Book author</string>
+    <string name="book_genre_placeholder">Book genre</string>
+    <string name="start_date_label">Start date:</string>
     <string name="start_date_hint">yyyy-MM-dd</string>
-    <string name="end_date_label">Fecha de fin:</string>
+    <string name="end_date_label">End date:</string>
     <string name="end_date_hint">yyyy-MM-dd</string>
-    <string name="notes_label">Notas:</string>
-    <string name="notes_hint">Escribe tus notas aquí...</string>
-    <string name="favorite_characters_label">Personajes favoritos:</string>
-    <string name="favorite_characters_hint">Lista tus personajes favoritos...</string>
+    <string name="notes_label">Notes:</string>
+    <string name="notes_hint">Write your notes here...</string>
+    <string name="favorite_characters_label">Favorite characters:</string>
+    <string name="favorite_characters_hint">List your favorite characters...</string>
+    <string name="debes_iniciar_sesi_n_para_a_adir_un_libro">You must log in to add a book</string>
+    <string name="por_favor_completa_todos_los_campos">Please complete all fields</string>
+    <string name="libro_a_adido_a">"Book added to "</string>
+    <string name="error_al_cargar_usuario">Error loading user</string>
+    <string name="por_favor_escribe_algo_para_publicar">Please write something to publish.</string>
+    <string name="por_favor_selecciona_un_g_nero_literario">Please select a literary genre.</string>
+    <string name="publicando">Publishing...</string>
+    <string name="error_al_procesar_la_imagen">Error processing image</string>
+    <string name="eliminar_publicaci_n">Delete post?</string>
+    <string name="estas_seguro">Are you sure you want to delete this post? This action cannot be undone.</string>
+    <string name="eliminar">Delete</string>
+    <string name="post_eliminado">Post deleted</string>
+    <string name="publicaci_n_exitosa">Post published successfully</string>
+    <string name="comentarios">Comments</string>
+    <string name="escribe_un_comentario">Write a comment...</string>
+    <string name="confirmar_eliminaci_n">Confirm deletion</string>
 
 </resources>

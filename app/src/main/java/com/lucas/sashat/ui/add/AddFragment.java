@@ -112,7 +112,7 @@ public class AddFragment extends Fragment {
     private void saveBookToFirestore() {
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser == null) {
-            Toast.makeText(getContext(), "Debes iniciar sesión para añadir un libro", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.debes_iniciar_sesi_n_para_a_adir_un_libro, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -124,7 +124,7 @@ public class AddFragment extends Fragment {
         String userId = currentUser.getUid();
 
         if (title.isEmpty() || author.isEmpty() || genre.isEmpty()) {
-            Toast.makeText(getContext(), "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.por_favor_completa_todos_los_campos, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -197,7 +197,7 @@ public class AddFragment extends Fragment {
                                                     .document(bookId)
                                                     .set(bookData)
                                                     .addOnSuccessListener(aVoid -> {
-                                                        Toast.makeText(getContext(), "Libro añadido a " + state, Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(getContext(), getString(R.string.libro_a_adido_a) + state, Toast.LENGTH_SHORT).show();
                                                         clearFields();
                                                         Log.d("AddFragment", "Libro añadido con ID: " + bookId);
                                                     })

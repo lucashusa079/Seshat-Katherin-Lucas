@@ -105,8 +105,8 @@ public class SettingsFragment extends Fragment {
     }
 
     private void openLanguageDialog() {
-        String[] languages = {"English", "Català", "Español", "Français", "Deutsch"};
-        String[] languageCodes = {"en", "ca", "es", "fr", "de"};
+        String[] languages = {"English", "Español", "Deutsch", "Italian"};
+        String[] languageCodes = {"en", "es", "de", "it"};
 
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.choose_language))
