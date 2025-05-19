@@ -85,7 +85,7 @@ public class AddFragment extends Fragment {
         // Configurar el botón de selección de imagen
         selectImageButton.setOnClickListener(v -> openImagePicker());
 
-        addButton.setOnClickListener(v -> addBookToFirestore());
+        addButton.setOnClickListener(v -> saveBookToFirestore());
         closeButton.setOnClickListener(v -> {
             NavController navController = NavHostFragment.findNavController(AddFragment.this);
             navController.popBackStack();
