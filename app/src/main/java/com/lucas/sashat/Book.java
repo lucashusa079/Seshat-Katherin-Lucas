@@ -2,6 +2,9 @@ package com.lucas.sashat;
 
 import com.google.firebase.Timestamp;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Book {
     private String title;
     private String author;
